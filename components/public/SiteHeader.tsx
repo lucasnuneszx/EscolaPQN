@@ -25,7 +25,6 @@ export default function SiteHeader({ paginaAtiva }: SiteHeaderProps) {
   return (
     <header className="border-b border-slate-100 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sticky top-0 z-40 transition-colors duration-200">
       <nav className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-        {/* Logo e Nome */}
         <Link href="/" className="flex items-center gap-2.5 shrink-0">
           <Image
             src="/brand/logo-pequeno-principe.png"
@@ -41,7 +40,6 @@ export default function SiteHeader({ paginaAtiva }: SiteHeaderProps) {
           </div>
         </Link>
 
-        {/* Links Desktop */}
         <div className="hidden lg:flex items-center gap-6 xl:gap-7">
           {NAV_LINKS.map(([label, href]) => (
             <Link
@@ -58,7 +56,6 @@ export default function SiteHeader({ paginaAtiva }: SiteHeaderProps) {
           ))}
         </div>
 
-        {/* Ações Direita (Tema, Portal, Matrículas e Hamburguer) */}
         <div className="flex items-center gap-2 sm:gap-3">
           <ThemeToggle />
 
@@ -76,7 +73,6 @@ export default function SiteHeader({ paginaAtiva }: SiteHeaderProps) {
             Matrículas 2027
           </Link>
 
-          {/* Botão Hambúrguer Mobile */}
           <button
             type="button"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}

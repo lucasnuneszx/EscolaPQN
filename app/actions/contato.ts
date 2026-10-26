@@ -1,7 +1,5 @@
 'use server'
-// ─────────────────────────────────────────────────────────────
 // Server Actions do formulário de contato (site público)
-// ─────────────────────────────────────────────────────────────
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { registrarAuditoria } from '@/lib/audit'

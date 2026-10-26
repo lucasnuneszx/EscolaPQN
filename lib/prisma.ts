@@ -1,6 +1,4 @@
-// ─────────────────────────────────────────────────────────────
-// Singleton do cliente Prisma — Prisma 7 com PostgreSQL Driver Adapter (Neon / Vercel Postgres)
-// ─────────────────────────────────────────────────────────────
+// Cliente Prisma único por processo, via driver adapter do PostgreSQL
 import 'server-only'
 import { PrismaClient } from '@prisma/client'
 import { PrismaPg } from '@prisma/adapter-pg'

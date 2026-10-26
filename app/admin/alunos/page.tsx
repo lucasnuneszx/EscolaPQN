@@ -48,7 +48,6 @@ export default async function AlunosPage() {
         }
       />
 
-      {/* Renderiza o componente cliente interativo com o modal de detalhes */}
       <AlunosClientList alunosIniciais={alunos} />
     </div>
   )

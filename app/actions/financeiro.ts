@@ -1,14 +1,9 @@
 'use server'
-// ─────────────────────────────────────────────────────────────
 // Server Actions — Financeiro (mensalidades / cobranças Asaas)
 //
-// NOTA IMPORTANTE sobre `gerarLinkCobranca`: não há chamada de
-// rede real para a API do Asaas. As credenciais em .env.local
-// (ASAAS_API_KEY, ASAAS_API_URL, ...) são placeholders de sandbox
-// que ainda não foram configurados/validados. Para permitir o
-// fluxo de UI ser testado ponta a ponta, criamos um registro
-// `AsaasCobranca` simulado localmente. Ver comentário TODO abaixo.
-// ─────────────────────────────────────────────────────────────
+// `gerarLinkCobranca` ainda não chama a API do Asaas: as credenciais
+// não estão configuradas, então a cobrança é registrada localmente
+// como simulada para o fluxo de UI funcionar.
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -17,7 +12,7 @@ import { getSession } from '@/lib/session'
 import { temPermissao } from '@/lib/rbac'
 import { registrarAuditoria } from '@/lib/audit'
 
-// ─── Criar mensalidade ──────────────────────────────────────
+// Criar mensalidade
 
 const MensalidadeSchema = z.object({
   alunoId: z.string().min(1, { message: 'Selecione um aluno.' }),
@@ -104,7 +99,7 @@ export async function criarMensalidade(
   redirect(`/admin/financeiro/${mensalidadeId}`)
 }
 
-// ─── Marcar como pago ───────────────────────────────────────
+// Marcar como pago
 
 export async function marcarComoPago(
   id: string,
@@ -149,7 +144,7 @@ export async function marcarComoPago(
   return { success: true, message: 'Mensalidade marcada como paga com sucesso.' }
 }
 
-// ─── Gerar link de cobrança (SIMULADO) ─────────────────────────
+// Gerar link de cobrança (SIMULADO)
 
 export async function gerarLinkCobranca(
   id: string,
@@ -166,10 +161,7 @@ export async function gerarLinkCobranca(
     return { message: 'Mensalidade não encontrada.' }
   }
 
-  // TODO: integração real com Asaas via marketplace — as credenciais em
-  // .env.local ainda são placeholders de sandbox não configurados. Por ora,
-  // simulamos localmente a criação da cobrança para permitir testar o fluxo
-  // de UI (detalhe da mensalidade, boleto/pix "simulados").
+  // TODO: chamar a API do Asaas quando as credenciais estiverem configuradas.
   const asaasId = `sim_${crypto.randomUUID()}`
 
   const cobranca = await prisma.asaasCobranca.create({

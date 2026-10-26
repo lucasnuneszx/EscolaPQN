@@ -1,7 +1,5 @@
-// ─────────────────────────────────────────────────────────────
 // Gerenciamento de Sessão (stateless JWT com Jose)
 // Não usa NextAuth — implementação própria conforme guia Next.js
-// ─────────────────────────────────────────────────────────────
 import 'server-only'
 import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'

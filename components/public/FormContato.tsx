@@ -1,7 +1,4 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de contato — Client Component
-// ─────────────────────────────────────────────────────────────
 import { useActionState, useState } from 'react'
 import { enviarMensagemContato, type ContatoState } from '@/app/actions/contato'
 import { salvarLeadRapido } from '@/app/actions/leads'

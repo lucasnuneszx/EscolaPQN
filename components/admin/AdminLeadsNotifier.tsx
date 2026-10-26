@@ -41,10 +41,8 @@ export function AdminLeadsNotifier() {
 
       if (data.latestLead) {
         if (!isFirstCheck.current && lastKnownLeadId.current && lastKnownLeadId.current !== data.latestLead.id) {
-          // Novo lead detectado enquanto o gestor estava com a tela aberta!
           setLatestToast(data.latestLead)
 
-          // Auto-hide toast após 10 segundos
           setTimeout(() => {
             setLatestToast(null)
           }, 10000)
@@ -53,13 +51,13 @@ export function AdminLeadsNotifier() {
       }
       isFirstCheck.current = false
     } catch (e) {
-      // Falha silenciosa de polling
+      // polling: falha silenciosa, tenta de novo no próximo ciclo
     }
   }
 
   useEffect(() => {
     checkNewLeads()
-    const interval = setInterval(checkNewLeads, 10000) // Verifica a cada 10s
+    const interval = setInterval(checkNewLeads, 10000)
     return () => clearInterval(interval)
   }, [])
 
@@ -75,7 +73,6 @@ export function AdminLeadsNotifier() {
 
   return (
     <>
-      {/* Botão de Sino no Topbar */}
       <Link
         href="/admin/leads"
         className="relative p-2 rounded-lg text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors"
@@ -96,7 +93,6 @@ export function AdminLeadsNotifier() {
         )}
       </Link>
 
-      {/* Toast Popup Imediato na Tela */}
       {latestToast && (
         <div className="fixed top-18 right-6 z-50 max-w-sm bg-white dark:bg-slate-900 border-2 border-emerald-500 rounded-2xl p-4 shadow-2xl animate-fade-in flex flex-col gap-3">
           <div className="flex items-start justify-between gap-3">

@@ -1,7 +1,4 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de criação/edição de Comunicado — Client Component
-// ─────────────────────────────────────────────────────────────
 import { useActionState, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import {

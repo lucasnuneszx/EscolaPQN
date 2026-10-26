@@ -1,8 +1,6 @@
 'use server'
-// ─────────────────────────────────────────────────────────────
 // Server Actions de Alunos
 // Criar, atualizar, alterar status e vincular responsável
-// ─────────────────────────────────────────────────────────────
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -13,7 +11,7 @@ import { temPermissao } from '@/lib/rbac'
 import { registrarAuditoria } from '@/lib/audit'
 import { SERIES_ESCOLA, CODIGOS_SERIE, VALORES_TURNO, rotuloTurno, type TurnoEscola } from '@/lib/series-escola'
 
-// ─── Utilitários ─────────────────────────────────────────────
+// Utilitários
 
 function textoOpcional(v: FormDataEntryValue | null): string | undefined {
   const s = typeof v === 'string' ? v.trim() : ''
@@ -24,7 +22,7 @@ function boolCheckbox(v: FormDataEntryValue | null): boolean {
   return v === 'on' || v === 'true' || v === '1'
 }
 
-// ─── Esquemas de validação ─────────────────────────────────
+// Esquemas de validação
 
 const StatusAlunoEnum = z.enum(['ATIVO', 'INATIVO', 'TRANSFERIDO', 'TRANCADO', 'PENDENTE'])
 
@@ -76,7 +74,7 @@ const AtualizarAlunoSchema = AlunoBaseSchema.extend({
   turno: z.enum(VALORES_TURNO).optional(),
 })
 
-// ─── Tipos de estado ───────────────────────────────────────
+// Tipos de estado
 
 export type AlunoState = {
   errors?: Record<string, string[]>
@@ -84,7 +82,7 @@ export type AlunoState = {
   success?: boolean
 } | undefined
 
-// ─── Helper de erro do Prisma ───────────────────────────────
+// Helper de erro do Prisma
 
 function mensagemErroPrisma(error: unknown): string {
   if (error instanceof ErroMatricula) return error.message
@@ -94,7 +92,7 @@ function mensagemErroPrisma(error: unknown): string {
   return 'Ocorreu um erro inesperado. Tente novamente.'
 }
 
-// ─── Resolução de turma a partir de série + turno ─────────
+// Resolução de turma a partir de série + turno
 
 class ErroMatricula extends Error {}
 
@@ -139,7 +137,7 @@ async function resolverTurma(
   return nova.id
 }
 
-// ─── Ações ────────────────────────────────────────────────
+// Ações
 
 /**
  * Cria um novo aluno, opcionalmente efetivando matrícula em uma turma

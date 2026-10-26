@@ -38,7 +38,6 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
       className={`relative w-9 h-9 flex items-center justify-center rounded-lg border border-slate-200 dark:border-slate-700/80 bg-white/90 dark:bg-slate-800 text-slate-600 dark:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-amber-200 shadow-sm transition-all duration-200 cursor-pointer focus:outline-none focus:ring-2 focus:ring-brand-500/30 ${className}`}
     >
       {isDark ? (
-        // Ícone de Sol quando está escuro (para clicar e ir pro claro)
         <svg
           className="w-4.5 h-4.5 transition-transform duration-300 rotate-0 hover:rotate-45"
           fill="none"
@@ -53,7 +52,6 @@ export function ThemeToggle({ className = '' }: ThemeToggleProps) {
           />
         </svg>
       ) : (
-        // Ícone de Lua quando está claro (para clicar e ir pro escuro)
         <svg
           className="w-4.5 h-4.5 transition-transform duration-300 -rotate-12 hover:rotate-0 text-slate-600"
           fill="none"

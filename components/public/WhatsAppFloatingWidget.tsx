@@ -78,7 +78,6 @@ export function WhatsAppFloatingWidget() {
   const [mostrarBalão, setMostrarBalão] = useState(false)
   const [abaAtiva, setAbaAtiva] = useState<'atalhos' | 'express'>('atalhos')
 
-  // Form Express State
   const [nomeResp, setNomeResp] = useState('')
   const [telResp, setTelResp] = useState('')
   const [nomeAluno, setNomeAluno] = useState('')
@@ -103,7 +102,6 @@ export function WhatsAppFloatingWidget() {
     e.preventDefault()
     if (!nomeResp.trim() || !nomeAluno.trim()) return
 
-    // Salva no banco de leads instantaneamente
     salvarLeadRapido({
       tipo: 'WHATSAPP_EXPRESS',
       nomeResponsavel: nomeResp.trim(),
@@ -161,7 +159,6 @@ export function WhatsAppFloatingWidget() {
       {/* Janela de Atendimento do WhatsApp */}
       {aberto && (
         <div className="mb-3 w-[92vw] sm:w-[380px] max-h-[85vh] bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-2xl flex flex-col overflow-hidden animate-fade-in transition-all">
-          {/* Header da Janela */}
           <div className="bg-[#128C7E] dark:bg-[#075E54] text-white p-4 flex items-center justify-between shadow-sm shrink-0">
             <div className="flex items-center gap-3">
               <div className="relative">
@@ -409,7 +406,6 @@ export function WhatsAppFloatingWidget() {
         aria-label={aberto ? 'Fechar atendimento WhatsApp' : 'Abrir atendimento WhatsApp'}
         className="group relative w-14 h-14 rounded-full bg-[#25D366] hover:bg-[#20ba5a] text-white flex items-center justify-center shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105 cursor-pointer focus:outline-none focus:ring-4 focus:ring-emerald-400/30"
       >
-        {/* Anel de pulso contínuo */}
         <span className="absolute inset-0 rounded-full bg-emerald-400 opacity-40 animate-ping pointer-events-none" />
 
         {aberto ? (
@@ -422,7 +418,6 @@ export function WhatsAppFloatingWidget() {
           </svg>
         )}
 
-        {/* Badge online */}
         {!aberto && (
           <span className="absolute -top-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center text-[9px] font-bold text-white shadow-xs">
             1

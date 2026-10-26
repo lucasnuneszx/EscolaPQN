@@ -1,7 +1,4 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de criação de Disciplina — Client Component
-// ─────────────────────────────────────────────────────────────
 import { useActionState } from 'react'
 import { useRouter } from 'next/navigation'
 import { criarDisciplina, type DisciplinaState } from '@/app/actions/academico'

@@ -1,7 +1,5 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Sidebar do painel administrativo — Visual Dark Premium (SaaS)
-// ─────────────────────────────────────────────────────────────
+// Sidebar do painel administrativo
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -127,7 +125,6 @@ export default function AdminSidebar({ perfil }: AdminSidebarProps) {
     item.perfis.includes(perfil)
   )
 
-  // Agrupa os itens da sidebar pelas suas categorias
   const categorias: Array<NavItem['categoria']> = [
     'PRINCIPAL',
     'ACADÊMICO',
@@ -139,10 +136,9 @@ export default function AdminSidebar({ perfil }: AdminSidebarProps) {
   return (
     <aside className="w-64 bg-[#090d16] border-r border-[#1e293b]/20 flex flex-col h-full shrink-0 text-slate-400 select-none">
       
-      {/* ── Logo e Brand ──────────────────────────────────────── */}
+      {/* Logo e Brand */}
       <div className="p-5 border-b border-[#1e293b]/30 bg-[#070a11]/40">
         <div className="flex items-center gap-3">
-          {/* Logo Institucional */}
           <Image
             src="/brand/logo-pequeno-principe.jpg"
             alt="Pequeno Príncipe"
@@ -162,7 +158,7 @@ export default function AdminSidebar({ perfil }: AdminSidebarProps) {
         </div>
       </div>
 
-      {/* ── Menu / Navegação Categorizada ─────────────────────── */}
+      {/* Menu / Navegação Categorizada */}
       <nav className="flex-1 overflow-y-auto p-4 space-y-4 scrollbar-sidebar" aria-label="Navegação administrativa">
         {categorias.map((cat) => {
           const itensDaCategoria = itemsFiltrados.filter((item) => item.categoria === cat)
@@ -170,12 +166,10 @@ export default function AdminSidebar({ perfil }: AdminSidebarProps) {
 
           return (
             <div key={cat} className="space-y-1">
-              {/* Título da Categoria */}
               <span className="text-[9px] font-extrabold tracking-widest text-[#475569] uppercase px-3 block mb-1.5">
                 {cat}
               </span>
               
-              {/* Links da Categoria */}
               <ul className="space-y-0.5">
                 {itensDaCategoria.map((item) => {
                   const ativo =
@@ -207,7 +201,7 @@ export default function AdminSidebar({ perfil }: AdminSidebarProps) {
         })}
       </nav>
 
-      {/* ── Operador Ativo ────────────────────────────────────── */}
+      {/* Operador Ativo */}
       <div className="p-4 border-t border-[#1e293b]/30 bg-[#070a11]/40 flex items-center gap-3">
         <div className="w-8 h-8 rounded-full bg-slate-800 border border-slate-700/60 flex items-center justify-center shrink-0">
           <span className="text-xs font-extrabold text-slate-300">

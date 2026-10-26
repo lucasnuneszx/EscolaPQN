@@ -1,9 +1,7 @@
 'use server'
-// ─────────────────────────────────────────────────────────────
 // Server Actions do Portal — chamada e lançamento de notas
 // Executadas apenas por PROFESSOR (ou ADMIN), sempre escopadas
 // ao vínculo (TurmaDisciplina) de propriedade do professor logado.
-// ─────────────────────────────────────────────────────────────
 import { revalidatePath } from 'next/cache'
 import { prisma } from '@/lib/prisma'
 import { getSession } from '@/lib/session'

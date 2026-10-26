@@ -1,7 +1,5 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
 // Topbar do Portal — saudação, nome do usuário e ação de sair
-// ─────────────────────────────────────────────────────────────
 import { useActionState, useState } from 'react'
 import { logout } from '@/app/actions/auth'
 import type { SessionPayload } from '@/lib/session'

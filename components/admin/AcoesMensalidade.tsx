@@ -1,8 +1,6 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Ações da tela de detalhe da mensalidade — Client Component
+// Ações da tela de detalhe da mensalidade
 // "Marcar como pago" e "Gerar cobrança (simulada)"
-// ─────────────────────────────────────────────────────────────
 import { useActionState } from 'react'
 import {
   marcarComoPago,

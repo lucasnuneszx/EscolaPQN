@@ -1,8 +1,6 @@
 'use server'
-// ─────────────────────────────────────────────────────────────
 // Server Actions de autenticação
 // Login, logout, recuperação de senha
-// ─────────────────────────────────────────────────────────────
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 import bcrypt from 'bcryptjs'
@@ -15,7 +13,7 @@ import {
 } from '@/lib/session'
 import { getRedirectUrlPorPerfil } from '@/lib/rbac'
 
-// ─── Esquemas de validação ─────────────────────────────────
+// Esquemas de validação
 
 const LoginSchema = z.object({
   email: z.string().email({ message: 'E-mail inválido.' }).trim().toLowerCase(),
@@ -37,7 +35,7 @@ const ResetPasswordSchema = z.object({
   path: ['confirmPassword'],
 })
 
-// ─── Tipos de estado ───────────────────────────────────────
+// Tipos de estado
 
 export type AuthState = {
   errors?: Record<string, string[]>
@@ -45,7 +43,7 @@ export type AuthState = {
   success?: boolean
 } | undefined
 
-// ─── Ações ────────────────────────────────────────────────
+// Ações
 
 /**
  * Login — valida credenciais, cria sessão e redireciona por perfil.
@@ -65,7 +63,6 @@ export async function login(
 
   const { email, password } = validated.data
 
-  // Buscar usuário
   const usuario = await prisma.usuario.findUnique({
     where: { email },
     select: {
@@ -82,19 +79,16 @@ export async function login(
     return { message: 'E-mail ou senha inválidos.' }
   }
 
-  // Verificar senha
   const senhaValida = await bcrypt.compare(password, usuario.senhaHash)
   if (!senhaValida) {
     return { message: 'E-mail ou senha inválidos.' }
   }
 
-  // Atualizar último acesso
   await prisma.usuario.update({
     where: { id: usuario.id },
     data: { ultimoAcesso: new Date() },
   })
 
-  // Criar sessão
   await createSession({
     userId: usuario.id,
     perfil: usuario.perfil as PerfilUsuario,
@@ -102,7 +96,6 @@ export async function login(
     email: usuario.email,
   })
 
-  // Redirecionar por perfil
   redirect(getRedirectUrlPorPerfil(usuario.perfil as PerfilUsuario))
 }
 
@@ -143,9 +136,8 @@ export async function solicitarRecuperacaoSenha(
       data: { resetToken: token, resetTokenExp: expiracao },
     })
 
-    // TODO: enviar e-mail via Resend (integrar na Fase 3)
-    // await sendPasswordResetEmail(email, token)
-    console.log(`[DEV] Reset link: ${process.env.NEXT_PUBLIC_APP_URL}/redefinir-senha?token=${token}`)
+    // TODO: enviar o link por e-mail (Resend)
+    console.log(`Link de redefinição: ${process.env.NEXT_PUBLIC_APP_URL}/redefinir-senha?token=${token}`)
   }
 
   return {

@@ -34,7 +34,7 @@ export default function SobrePage() {
     <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <SiteHeader paginaAtiva="/sobre" />
 
-      {/* ── Hero ──────────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="max-w-6xl mx-auto px-6 pt-16 pb-12 grid md:grid-cols-2 gap-12 items-center">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] dark:text-red-400 mb-4">
@@ -60,7 +60,7 @@ export default function SobrePage() {
         </div>
       </section>
 
-      {/* ── História ──────────────────────────────────────────── */}
+      {/* História */}
       <section className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-16 items-start">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] dark:text-red-400 mb-3">
@@ -94,7 +94,7 @@ export default function SobrePage() {
         </div>
       </section>
 
-      {/* ── Missão, Visão, Valores ────────────────────────────── */}
+      {/* Missão, Visão, Valores */}
       <section className="bg-slate-50 dark:bg-slate-900/60 border-y border-slate-100 dark:border-slate-800">
         <div className="max-w-6xl mx-auto px-6 py-16">
           <div className="max-w-xl mb-12">
@@ -136,7 +136,7 @@ export default function SobrePage() {
         </div>
       </section>
 
-      {/* ── Proposta pedagógica ───────────────────────────────── */}
+      {/* Proposta pedagógica */}
       <section id="pedagogia" className="max-w-6xl mx-auto px-6 py-16 scroll-mt-20">
         <div className="max-w-xl mb-12">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] dark:text-red-400 mb-3">
@@ -210,7 +210,7 @@ export default function SobrePage() {
         </div>
       </section>
 
-      {/* ── CTA ───────────────────────────────────────────────── */}
+      {/* CTA */}
       <section className="bg-[#b91c1c] text-white">
         <div className="max-w-6xl mx-auto px-6 py-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div className="max-w-lg">

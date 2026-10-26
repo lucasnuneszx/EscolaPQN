@@ -1,8 +1,6 @@
 'use server'
-// ─────────────────────────────────────────────────────────────
 // Server Actions de Responsáveis
 // Criar, atualizar, excluir e desvincular de alunos
-// ─────────────────────────────────────────────────────────────
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
@@ -13,7 +11,7 @@ import { getSession } from '@/lib/session'
 import { temPermissao } from '@/lib/rbac'
 import { registrarAuditoria } from '@/lib/audit'
 
-// ─── Utilitários ─────────────────────────────────────────────
+// Utilitários
 
 function textoOpcional(v: FormDataEntryValue | null): string | undefined {
   const s = typeof v === 'string' ? v.trim() : ''
@@ -42,7 +40,7 @@ function mensagemErroPrisma(error: unknown): string {
   return 'Ocorreu um erro inesperado. Tente novamente.'
 }
 
-// ─── Esquemas de validação ─────────────────────────────────
+// Esquemas de validação
 
 const ResponsavelBaseSchema = z.object({
   nome: z.string().trim().min(2, { message: 'Informe o nome completo do responsável.' }),
@@ -70,7 +68,7 @@ export type ResponsavelState = {
   success?: boolean
 } | undefined
 
-// ─── Ações ────────────────────────────────────────────────
+// Ações
 
 /**
  * Cria um novo responsável. Se `criarAcessoPortal` for marcado e um e-mail

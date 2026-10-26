@@ -1,7 +1,5 @@
 'use server'
-// ─────────────────────────────────────────────────────────────
 // Server Actions — Estrutura Acadêmica (séries, disciplinas, notas)
-// ─────────────────────────────────────────────────────────────
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -11,7 +9,7 @@ import { getSession } from '@/lib/session'
 import { isAdminOuSecretaria, temPermissao } from '@/lib/rbac'
 import { registrarAuditoria } from '@/lib/audit'
 
-// ─── Série ────────────────────────────────────────────────────
+// Série
 
 const SerieSchema = z.object({
   nome: z
@@ -80,7 +78,7 @@ export async function criarSerie(
   redirect('/admin/academico')
 }
 
-// ─── Disciplina ───────────────────────────────────────────────
+// Disciplina
 
 const DisciplinaSchema = z.object({
   nome: z
@@ -148,7 +146,7 @@ export async function criarDisciplina(
   redirect('/admin/academico')
 }
 
-// ─── Lançamento de notas em lote ───────────────────────────────
+// Lançamento de notas em lote
 
 export type LancamentoNotasResult = {
   success?: boolean

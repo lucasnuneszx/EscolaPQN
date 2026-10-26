@@ -54,7 +54,7 @@ export default async function MatriculasPage() {
     <div className="min-h-screen bg-white text-slate-800">
       <SiteHeader paginaAtiva="/matriculas" />
 
-      {/* ── Hero ──────────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="max-w-6xl mx-auto px-6 pt-16 pb-12">
         <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] mb-4">
           Matrículas 2027 abertas
@@ -68,7 +68,7 @@ export default async function MatriculasPage() {
         </p>
       </section>
 
-      {/* ── Etapas ────────────────────────────────────────────── */}
+      {/* Etapas */}
       <section className="bg-slate-50 border-y border-slate-100">
         <div className="max-w-6xl mx-auto px-6 py-16">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] mb-3">
@@ -90,7 +90,7 @@ export default async function MatriculasPage() {
         </div>
       </section>
 
-      {/* ── Documentos ────────────────────────────────────────── */}
+      {/* Documentos */}
       <section className="max-w-6xl mx-auto px-6 py-16 grid md:grid-cols-2 gap-16">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] mb-3">
@@ -136,7 +136,7 @@ export default async function MatriculasPage() {
         </div>
       </section>
 
-      {/* ── Formulário ────────────────────────────────────────── */}
+      {/* Formulário */}
       <section id="formulario" className="bg-slate-50 border-t border-slate-100">
         <div className="max-w-2xl mx-auto px-6 py-16">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] mb-3 text-center">

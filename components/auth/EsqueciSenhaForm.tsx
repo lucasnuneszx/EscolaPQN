@@ -1,7 +1,4 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de recuperação de senha — Client Component
-// ─────────────────────────────────────────────────────────────
 import { useActionState } from 'react'
 import { solicitarRecuperacaoSenha, type AuthState } from '@/app/actions/auth'
 

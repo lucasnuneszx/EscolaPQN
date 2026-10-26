@@ -14,7 +14,7 @@ export default function AgendarVisitaPage() {
     <div className="min-h-screen bg-white text-slate-800">
       <SiteHeader paginaAtiva="/agendar-visita" />
 
-      {/* ── Hero ──────────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="max-w-6xl mx-auto px-6 pt-16 pb-12 grid md:grid-cols-2 gap-16 items-start">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] mb-4">

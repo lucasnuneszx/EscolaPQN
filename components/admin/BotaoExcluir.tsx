@@ -1,9 +1,7 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
 // Botão genérico de exclusão — envolve uma Server Action em um
 // <form> com confirmação via window.confirm(). Reutilizável em
 // qualquer listagem administrativa (comunicados, etc).
-// ─────────────────────────────────────────────────────────────
 
 interface BotaoExcluirProps {
   /** Server Action já vinculada ao id do registro, ex.: `excluirX.bind(null, id)` */

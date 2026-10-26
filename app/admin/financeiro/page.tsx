@@ -14,7 +14,6 @@ function formatarReais(valor: number): string {
 
 async function obterDadosFinanceiros() {
   const [mensalidades, resumo] = await Promise.all([
-    // Listar mensalidades recentes
     prisma.mensalidade.findMany({
       include: {
         aluno: { select: { nome: true } },
@@ -23,7 +22,6 @@ async function obterDadosFinanceiros() {
       orderBy: { dataVencimento: 'desc' },
       take: 10,
     }),
-    // Resumo agregador
     prisma.mensalidade.groupBy({
       by: ['status'],
       _sum: { valorFinal: true },
@@ -37,7 +35,6 @@ async function obterDadosFinanceiros() {
 export default async function FinanceiroPage() {
   const { mensalidades, resumo } = await obterDadosFinanceiros()
 
-  // Mapear soma do resumo por status
   const totais = resumo.reduce(
     (acc, item) => {
       acc[item.status] = {
@@ -70,7 +67,6 @@ export default async function FinanceiroPage() {
         }
       />
 
-      {/* Caixa de Métricas Financeiras */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
         <div className="bg-white border border-slate-200/80 rounded-xl p-5 border-t-[3px] border-t-emerald-600">
           <p className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Arrecadado no mês</p>
@@ -89,7 +85,6 @@ export default async function FinanceiroPage() {
         </div>
       </div>
 
-      {/* Tabela de Transações */}
       <div className="bg-white border border-slate-200/80 rounded-xl overflow-hidden">
         <div className="p-5 border-b border-slate-100 flex items-center justify-between">
           <h3 className="text-xs font-semibold text-slate-900 uppercase tracking-wider">Últimos Lançamentos</h3>

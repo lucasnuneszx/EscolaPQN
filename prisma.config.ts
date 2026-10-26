@@ -1,6 +1,4 @@
-// ─────────────────────────────────────────────────────────────
-// Configuração do Prisma CLI — Prisma 7+ (carregando .env.local)
-// ─────────────────────────────────────────────────────────────
+// Configuração do Prisma CLI (lê .env.local)
 import dotenv from 'dotenv'
 import { defineConfig } from 'prisma/config'
 

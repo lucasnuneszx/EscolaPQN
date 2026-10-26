@@ -25,7 +25,6 @@ export default async function RedefinirSenhaPage({
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
-      {/* Coluna da Esquerda: Mural Institucional (visível apenas em telas médias ou maiores) */}
       <div className="hidden md:flex md:w-1/2 relative bg-slate-900 overflow-hidden flex-col justify-between p-12 text-white">
         <div className="absolute inset-0 z-0">
           <Image
@@ -67,7 +66,6 @@ export default async function RedefinirSenhaPage({
         </div>
       </div>
 
-      {/* Coluna da Direita: Formulário Limpo */}
       <div className="flex-1 flex flex-col justify-center px-6 py-12 md:px-12 lg:px-24 bg-white relative z-10">
         <div className="mx-auto w-full max-w-sm">
           <div className="md:hidden flex items-center gap-3 mb-8">

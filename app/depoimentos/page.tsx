@@ -71,7 +71,7 @@ export default function DepoimentosPage() {
     <div className="min-h-screen bg-white text-slate-800">
       <SiteHeader paginaAtiva="/depoimentos" />
 
-      {/* ── Hero ──────────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="max-w-6xl mx-auto px-6 pt-16 pb-12 text-center">
         <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] mb-4">
           Depoimentos
@@ -85,7 +85,7 @@ export default function DepoimentosPage() {
         </p>
       </section>
 
-      {/* ── Grid de depoimentos ───────────────────────────────── */}
+      {/* Grid de depoimentos */}
       <section className="max-w-6xl mx-auto px-6 pb-20">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {DEPOIMENTOS.map(({ nome, relacao, citacao }) => (
@@ -105,7 +105,7 @@ export default function DepoimentosPage() {
         </div>
       </section>
 
-      {/* ── CTA ───────────────────────────────────────────────── */}
+      {/* CTA */}
       <section className="bg-[#b91c1c]">
         <div className="max-w-6xl mx-auto px-6 py-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div className="max-w-lg">

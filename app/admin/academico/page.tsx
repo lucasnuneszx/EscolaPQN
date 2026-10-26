@@ -28,7 +28,6 @@ export default async function AcademicoPage() {
         }
       />
 
-      {/* Grid de Seções */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Séries Cadastradas */}
         <div className="bg-white border border-slate-200/80 rounded-xl p-6">

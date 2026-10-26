@@ -1,6 +1,4 @@
-// ─────────────────────────────────────────────────────────────
 // RBAC — Controle de acesso baseado em perfil
-// ─────────────────────────────────────────────────────────────
 import { PerfilUsuario } from '@/lib/session'
 
 /**
@@ -8,13 +6,13 @@ import { PerfilUsuario } from '@/lib/session'
  * Escalonado do mais restrito ao mais permissivo.
  */
 const PERMISSOES: Record<string, PerfilUsuario[]> = {
-  // ── Administração ─────────────────────────────────────────
+  // Administração
   'admin:acesso':        ['ADMIN'],
   'admin:configuracoes': ['ADMIN'],
   'admin:usuarios:criar': ['ADMIN'],
   'admin:relatorios':    ['ADMIN', 'SECRETARIA'],
 
-  // ── Secretaria / Alunos ───────────────────────────────────
+  // Secretaria / Alunos
   'alunos:ver':         ['ADMIN', 'SECRETARIA', 'PROFESSOR'],
   'alunos:criar':       ['ADMIN', 'SECRETARIA'],
   'alunos:editar':      ['ADMIN', 'SECRETARIA'],
@@ -22,37 +20,37 @@ const PERMISSOES: Record<string, PerfilUsuario[]> = {
   'alunos:status':      ['ADMIN', 'SECRETARIA'],
   'alunos:documentos':  ['ADMIN', 'SECRETARIA'],
 
-  // ── Turmas ────────────────────────────────────────────────
+  // Turmas
   'turmas:ver':         ['ADMIN', 'SECRETARIA', 'PROFESSOR'],
   'turmas:criar':       ['ADMIN', 'SECRETARIA'],
   'turmas:editar':      ['ADMIN', 'SECRETARIA'],
 
-  // ── Financeiro ────────────────────────────────────────────
+  // Financeiro
   'financeiro:ver':           ['ADMIN', 'SECRETARIA'],
   'financeiro:criar':         ['ADMIN', 'SECRETARIA'],
   'financeiro:editar':        ['ADMIN', 'SECRETARIA'],
   'financeiro:gerar_cobranca': ['ADMIN', 'SECRETARIA'],
   'financeiro:meu':           ['ADMIN', 'SECRETARIA', 'RESPONSAVEL'],
 
-  // ── Notas ─────────────────────────────────────────────────
+  // Notas
   'notas:ver':          ['ADMIN', 'SECRETARIA', 'PROFESSOR'],
   'notas:lancar':       ['ADMIN', 'PROFESSOR'],
   'notas:editar':       ['ADMIN', 'PROFESSOR'],
   'notas:minhas':       ['ADMIN', 'SECRETARIA', 'PROFESSOR', 'RESPONSAVEL', 'ALUNO'],
 
-  // ── Chamada / Frequência ───────────────────────────────────
+  // Chamada / Frequência
   'chamada:fazer':      ['ADMIN', 'PROFESSOR'],
   'chamada:ver':        ['ADMIN', 'SECRETARIA', 'PROFESSOR'],
   'chamada:minha':      ['ADMIN', 'SECRETARIA', 'PROFESSOR', 'RESPONSAVEL'],
 
-  // ── Comunicados ───────────────────────────────────────────
+  // Comunicados
   'comunicados:criar':  ['ADMIN', 'SECRETARIA', 'PROFESSOR'],
   'comunicados:ver':    ['ADMIN', 'SECRETARIA', 'PROFESSOR', 'RESPONSAVEL', 'ALUNO'],
 
-  // ── Portal (responsável/aluno) ────────────────────────────
+  // Portal (responsável/aluno)
   'portal:acesso':      ['ADMIN', 'SECRETARIA', 'PROFESSOR', 'RESPONSAVEL', 'ALUNO'],
 
-  // ── Auditoria ─────────────────────────────────────────────
+  // Auditoria
   'auditoria:ver':      ['ADMIN'],
 }
 

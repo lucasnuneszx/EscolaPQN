@@ -1,8 +1,6 @@
 'use server'
-// ─────────────────────────────────────────────────────────────
 // Server Actions de interesse de matrícula e agendamento de visita
 // (site público — não requer autenticação)
-// ─────────────────────────────────────────────────────────────
 import { z } from 'zod'
 import { prisma } from '@/lib/prisma'
 import { registrarAuditoria } from '@/lib/audit'

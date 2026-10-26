@@ -1,7 +1,4 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de login — Client Component
-// ─────────────────────────────────────────────────────────────
 import { useActionState } from 'react'
 import { login, type AuthState } from '@/app/actions/auth'
 import { useState } from 'react'
@@ -23,7 +20,6 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
         <input type="hidden" name="callbackUrl" value={callbackUrl} />
       )}
 
-      {/* Erro Geral Limpo */}
       {state?.message && (
         <div
           role="alert"
@@ -39,7 +35,6 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
         </div>
       )}
 
-      {/* E-mail */}
       <div className="space-y-1.5">
         <label htmlFor="login-email" className="text-xs font-semibold text-slate-700 tracking-wide uppercase">
           E-mail institucional
@@ -61,7 +56,6 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
         )}
       </div>
 
-      {/* Senha */}
       <div className="space-y-1.5">
         <label htmlFor="login-password" className="text-xs font-semibold text-slate-700 tracking-wide uppercase">
           Senha
@@ -105,7 +99,6 @@ export default function LoginForm({ callbackUrl }: LoginFormProps) {
         )}
       </div>
 
-      {/* Botão de Envio */}
       <button
         type="submit"
         disabled={pending}

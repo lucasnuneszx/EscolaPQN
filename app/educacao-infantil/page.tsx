@@ -57,7 +57,7 @@ export default function EducacaoInfantilPage() {
     <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <SiteHeader paginaAtiva="/educacao-infantil" />
 
-      {/* ── Hero ──────────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="max-w-6xl mx-auto px-6 pt-16 pb-12 grid md:grid-cols-2 gap-12 items-center">
         <div>
           <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] dark:text-red-400 mb-4">
@@ -82,7 +82,7 @@ export default function EducacaoInfantilPage() {
         </div>
       </section>
 
-      {/* ── Turmas ────────────────────────────────────────────── */}
+      {/* Turmas */}
       <section className="bg-slate-50 dark:bg-slate-900/60 border-y border-slate-100 dark:border-slate-800">
         <div className="max-w-6xl mx-auto px-6 py-16">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] dark:text-red-400 mb-3">
@@ -103,7 +103,7 @@ export default function EducacaoInfantilPage() {
         </div>
       </section>
 
-      {/* ── Metodologia ───────────────────────────────────────── */}
+      {/* Metodologia */}
       <section className="max-w-6xl mx-auto px-6 py-16">
         <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] dark:text-red-400 mb-3">
           Metodologia
@@ -143,7 +143,7 @@ export default function EducacaoInfantilPage() {
         </div>
       </section>
 
-      {/* ── Diferenciais ──────────────────────────────────────── */}
+      {/* Diferenciais */}
       <section className="bg-slate-50 dark:bg-slate-900/60 border-y border-slate-100 dark:border-slate-800">
         <div className="max-w-6xl mx-auto px-6 py-16">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] dark:text-red-400 mb-3">
@@ -164,7 +164,7 @@ export default function EducacaoInfantilPage() {
         </div>
       </section>
 
-      {/* ── CTA ───────────────────────────────────────────────── */}
+      {/* CTA */}
       <section className="bg-[#b91c1c] text-white">
         <div className="max-w-6xl mx-auto px-6 py-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
           <div className="max-w-lg">

@@ -1,7 +1,4 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de redefinição de senha — Client Component
-// ─────────────────────────────────────────────────────────────
 import { useActionState, useState } from 'react'
 import Link from 'next/link'
 import { redefinirSenha, type AuthState } from '@/app/actions/auth'

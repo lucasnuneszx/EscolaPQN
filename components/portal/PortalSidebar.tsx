@@ -1,8 +1,6 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
 // Sidebar do Portal (Professor / Responsável / Aluno)
 // Visual claro e acolhedor — diferente do dashboard escuro do admin
-// ─────────────────────────────────────────────────────────────
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -113,7 +111,6 @@ export default function PortalSidebar({ perfil }: PortalSidebarProps) {
 
   return (
     <aside className="w-64 bg-white border-r border-slate-200 flex flex-col h-full shrink-0 select-none">
-      {/* Logo e Brand */}
       <div className="p-5 border-b border-slate-100">
         <div className="flex items-center gap-3">
           <Image
@@ -134,7 +131,6 @@ export default function PortalSidebar({ perfil }: PortalSidebarProps) {
         </div>
       </div>
 
-      {/* Navegação */}
       <nav className="flex-1 overflow-y-auto p-4 space-y-1" aria-label="Navegação do portal">
         {itens.map((item) => {
           const ativo = pathname === item.href || pathname.startsWith(item.href + '/')
@@ -156,7 +152,6 @@ export default function PortalSidebar({ perfil }: PortalSidebarProps) {
         })}
       </nav>
 
-      {/* Rodapé acolhedor */}
       <div className="p-4 border-t border-slate-100">
         <p className="text-[11px] text-slate-400 leading-relaxed font-medium">
           Dúvidas? Fale com a secretaria pelo telefone (71) 8722-6877.

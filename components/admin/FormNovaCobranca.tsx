@@ -1,7 +1,4 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de emissão de nova mensalidade/fatura — Client Component
-// ─────────────────────────────────────────────────────────────
 import { useActionState } from 'react'
 import { useRouter } from 'next/navigation'
 import { criarMensalidade, type FinanceiroState } from '@/app/actions/financeiro'

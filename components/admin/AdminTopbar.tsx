@@ -1,7 +1,5 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
 // Topbar do painel administrativo
-// ─────────────────────────────────────────────────────────────
 import { useActionState } from 'react'
 import { logout } from '@/app/actions/auth'
 import type { SessionPayload } from '@/lib/session'
@@ -28,15 +26,11 @@ export default function AdminTopbar({ sessao }: AdminTopbarProps) {
       {/* Espaço para breadcrumb */}
       <div className="flex-1" />
 
-      {/* Ações direita */}
       <div className="flex items-center gap-2 sm:gap-3">
-        {/* Toggle Claro/Escuro */}
         <ThemeToggle />
 
-        {/* Notificador em Tempo Real de Leads */}
         <AdminLeadsNotifier />
 
-        {/* Menu do usuário */}
         <div className="relative">
           <button
             id="user-menu-btn"
@@ -63,7 +57,6 @@ export default function AdminTopbar({ sessao }: AdminTopbarProps) {
             </svg>
           </button>
 
-          {/* Dropdown */}
           {menuAberto && (
             <>
               {/* Overlay para fechar */}

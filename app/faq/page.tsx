@@ -65,7 +65,7 @@ export default function FaqPage() {
     <div className="min-h-screen bg-white text-slate-800">
       <SiteHeader paginaAtiva="/faq" />
 
-      {/* ── Hero ──────────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="max-w-3xl mx-auto px-6 pt-16 pb-8 text-center">
         <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] mb-4">
           Dúvidas frequentes
@@ -79,7 +79,7 @@ export default function FaqPage() {
         </p>
       </section>
 
-      {/* ── FAQ ───────────────────────────────────────────────── */}
+      {/* FAQ */}
       <section className="max-w-3xl mx-auto px-6 pb-16">
         <div className="space-y-6">
           {FAQS.map(({ q, r }) => (
@@ -91,7 +91,7 @@ export default function FaqPage() {
         </div>
       </section>
 
-      {/* ── CTA ───────────────────────────────────────────────── */}
+      {/* CTA */}
       <section className="bg-slate-50 border-t border-slate-100">
         <div className="max-w-3xl mx-auto px-6 py-16 text-center">
           <h2 className="text-2xl font-bold text-slate-900 mb-3 font-display">

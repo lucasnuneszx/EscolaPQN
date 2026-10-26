@@ -27,14 +27,13 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-200 selection:bg-red-500 selection:text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
-      {/* ── Navegação ─────────────────────────────────────────── */}
+      {/* Navegação */}
       <SiteHeader paginaAtiva="/" />
 
-      {/* ── Hero Principal ────────────────────────────────────── */}
+      {/* Hero Principal */}
       <section className="relative overflow-hidden bg-gradient-to-b from-amber-50/40 via-white to-white dark:from-slate-900/60 dark:via-slate-950 dark:to-slate-950 pt-10 sm:pt-14 pb-14 sm:pb-20 border-b border-slate-100 dark:border-slate-800">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-12 gap-10 lg:gap-12 items-center">
           
-          {/* Coluna Texto (Hero) */}
           <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
             <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 dark:bg-red-950/60 border border-red-200/80 dark:border-red-800/60 text-[#b91c1c] dark:text-red-400 text-xs font-semibold uppercase tracking-wider shadow-xs">
               <span className="w-2 h-2 rounded-full bg-[#b91c1c] dark:bg-red-400 animate-pulse" />
@@ -53,7 +52,6 @@ export default function HomePage() {
               &ldquo;Só se vê bem com o coração. O essencial é invisível aos olhos.&rdquo; — Antoine de Saint-Exupéry
             </blockquote>
 
-            {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3 pt-2">
               <Link
                 href="/matriculas"
@@ -73,7 +71,6 @@ export default function HomePage() {
               </Link>
             </div>
 
-            {/* Números de Confiança */}
             <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-100 dark:border-slate-800 text-center lg:text-left">
               <div>
                 <p className="text-2xl sm:text-3xl font-extrabold text-[#b91c1c] dark:text-red-400">35+</p>
@@ -90,7 +87,6 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Coluna Imagem (Fachada com Card Flutuante) */}
           <div className="lg:col-span-5 relative mx-auto w-full max-w-md lg:max-w-none">
             <div className="relative rounded-3xl overflow-hidden aspect-[4/3] sm:aspect-[4/3] shadow-2xl border-4 border-white dark:border-slate-800 ring-1 ring-slate-200 dark:ring-slate-700">
               <Image
@@ -103,7 +99,6 @@ export default function HomePage() {
               />
             </div>
 
-            {/* Card Flutuante de Destaque */}
             <div className="absolute -bottom-5 sm:-bottom-6 -left-3 sm:-left-6 bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-700 p-4 rounded-2xl shadow-xl flex items-center gap-3.5 max-w-[280px]">
               <div className="w-11 h-11 rounded-xl bg-amber-100 dark:bg-amber-950/80 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
                 <Star className="w-5 h-5" fill="currentColor" strokeWidth={0} />
@@ -118,7 +113,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Barra de Pilares Rápidos ──────────────────────────── */}
+      {/* Barra de Pilares Rápidos */}
       <section className="bg-slate-50 dark:bg-slate-900/80 border-b border-slate-200/80 dark:border-slate-800 py-8">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 grid grid-cols-2 md:grid-cols-4 gap-6">
           {[
@@ -138,7 +133,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Segmentos de Ensino ───────────────────────────────── */}
+      {/* Segmentos de Ensino */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
           <p className="text-xs font-bold uppercase tracking-widest text-[#b91c1c] dark:text-red-400 mb-2">
@@ -153,7 +148,6 @@ export default function HomePage() {
         </div>
 
         <div className="grid md:grid-cols-2 gap-8">
-          {/* Card Educação Infantil */}
           <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-8 hover:shadow-xl transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between gap-4 mb-4">
@@ -191,7 +185,6 @@ export default function HomePage() {
             </Link>
           </div>
 
-          {/* Card Ensino Fundamental I */}
           <div className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-6 sm:p-8 hover:shadow-xl transition-all flex flex-col justify-between group">
             <div>
               <div className="flex items-center justify-between gap-4 mb-4">
@@ -231,7 +224,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Sobre & Proposta Pedagógica ───────────────────────── */}
+      {/* Sobre & Proposta Pedagógica */}
       <section className="bg-slate-50 dark:bg-slate-900/60 border-y border-slate-100 dark:border-slate-800 py-16 sm:py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 grid lg:grid-cols-12 gap-10 lg:gap-14 items-center">
           <div className="lg:col-span-6 relative rounded-3xl overflow-hidden aspect-[4/3] shadow-lg border border-slate-200 dark:border-slate-800">
@@ -272,7 +265,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Diferenciais ──────────────────────────────────────── */}
+      {/* Diferenciais */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 sm:py-20">
         <div className="text-center max-w-2xl mx-auto mb-12 sm:mb-16">
           <p className="text-xs font-bold uppercase tracking-widest text-[#b91c1c] dark:text-red-400 mb-2">
@@ -328,7 +321,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Depoimentos de Pais (Prova Social) ─────────────────── */}
+      {/* Depoimentos de Pais (Prova Social) */}
       <section className="bg-amber-50/50 dark:bg-amber-950/20 border-y border-amber-100 dark:border-amber-900/40 py-16 sm:py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-12">
@@ -377,7 +370,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Banner de Conversão (CTA) ─────────────────────────── */}
+      {/* Banner de Conversão (CTA) */}
       <section className="bg-gradient-to-r from-[#b91c1c] to-[#991b1b] text-white py-14 sm:py-16">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-left">
           <div className="max-w-xl space-y-2">
@@ -407,7 +400,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Localização & Contato ─────────────────────────────── */}
+      {/* Localização & Contato */}
       <section className="max-w-6xl mx-auto px-4 sm:px-6 py-16 grid lg:grid-cols-12 gap-10 items-start">
         <div className="lg:col-span-5 space-y-5">
           <p className="text-xs font-bold uppercase tracking-widest text-[#b91c1c] dark:text-red-400">
@@ -462,7 +455,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── FAQ Rápido ────────────────────────────────────────── */}
+      {/* FAQ Rápido */}
       <section className="bg-slate-50 dark:bg-slate-900/60 border-t border-slate-200 dark:border-slate-800 py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6">
           <p className="text-xs font-bold uppercase tracking-widest text-[#b91c1c] dark:text-red-400 mb-2 text-center">
@@ -503,7 +496,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ── Footer ────────────────────────────────────────────── */}
+      {/* Footer */}
       <SiteFooter />
     </div>
   )

@@ -1,8 +1,6 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de chamada — Client Component
+// Formulário de chamada
 // Envia a Server Action `fazerChamada` com o status de cada aluno.
-// ─────────────────────────────────────────────────────────────
 import { useActionState } from 'react'
 import { fazerChamada, type PortalActionState } from '@/app/actions/portal'
 

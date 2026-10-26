@@ -92,13 +92,11 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
   const [textoAnotacao, setTextoAnotacao] = useState('')
   const [isPending, startTransition] = useTransition()
 
-  // Contadores
   const totalLeads = leads.length
   const totalNovos = leads.filter((l) => !l.lido || l.status === 'NOVO').length
   const totalContatados = leads.filter((l) => l.status === 'CONTATADO' || l.status === 'EM_NEGOCIACAO').length
   const totalMatriculados = leads.filter((l) => l.status === 'MATRICULADO').length
 
-  // Filtragem
   const leadsFiltrados = leads.filter((l) => {
     const matchBusca =
       !busca ||
@@ -177,7 +175,6 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
 
   return (
     <div className="space-y-6">
-      {/* Header com Estatísticas */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         <div className="card p-5 border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs">
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">Total de Leads</p>
@@ -296,7 +293,6 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
                     : 'border-slate-200 dark:border-slate-800'
                 }`}
               >
-                {/* Badge não lido */}
                 {!lead.lido && (
                   <span className="absolute -top-2.5 right-6 bg-emerald-600 text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full shadow-xs uppercase tracking-wider">
                     Novo Lead
@@ -342,7 +338,6 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
                       <option value="ARQUIVADO">Arquivar</option>
                     </select>
 
-                    {/* Botão Follow-up no WhatsApp com Mensagem Pronta */}
                     <button
                       type="button"
                       onClick={() => abrirFollowUpWhatsApp(lead)}
@@ -355,7 +350,6 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
                       Follow-up WhatsApp
                     </button>
 
-                    {/* Marcar como lido / visto */}
                     {!lead.lido && (
                       <button
                         type="button"
@@ -368,7 +362,6 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
                       </button>
                     )}
 
-                    {/* Excluir */}
                     <button
                       type="button"
                       onClick={() => handleExcluir(lead.id, lead.nomeResponsavel)}

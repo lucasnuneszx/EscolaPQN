@@ -1,7 +1,4 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de interesse de matrícula — Client Component
-// ─────────────────────────────────────────────────────────────
 import { useActionState, useState } from 'react'
 import { submeterInteresseMatricula, type MatriculaState } from '@/app/actions/matricula'
 import { salvarLeadRapido } from '@/app/actions/leads'
@@ -33,7 +30,6 @@ export default function FormMatricula({ series }: FormMatriculaProps) {
   const [mensagem, setMensagem] = useState('')
 
   const abrirWhatsAppComDados = () => {
-    // Salva no banco de dados para evitar perda de lead
     if (nomeResp.trim() || tel.trim() || nomeAluno.trim()) {
       salvarLeadRapido({
         tipo: 'MATRICULA',
@@ -83,7 +79,6 @@ export default function FormMatricula({ series }: FormMatriculaProps) {
           </p>
         </div>
 
-        {/* Botão para ir direto ao WhatsApp com os dados */}
         <div className="pt-2">
           <button
             type="button"
@@ -279,7 +274,6 @@ export default function FormMatricula({ series }: FormMatriculaProps) {
           )}
         </button>
 
-        {/* Botão alternativo direto pro WhatsApp */}
         <button
           type="button"
           onClick={abrirWhatsAppComDados}

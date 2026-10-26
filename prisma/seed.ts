@@ -1,8 +1,5 @@
-// ─────────────────────────────────────────────────────────────
-// Seed — Dados altamente realistas e populosos para PostgreSQL
-// Cria 35+ alunos, 20+ responsáveis e faturamento completo 2026.
-// Execute: npx prisma db seed
-// ─────────────────────────────────────────────────────────────
+// Seed de desenvolvimento: 38 alunos fictícios, 20 responsáveis e mensalidades de 2026.
+// Uso: npx prisma db seed
 import dotenv from 'dotenv'
 dotenv.config({ path: '.env.local' })
 
@@ -19,7 +16,7 @@ const prisma = new PrismaClient({
   log: ['error']
 })
 
-// Pools de nomes para geração realista de dados
+// Nomes fictícios para gerar os dados
 const NOMES_MASCULINOS = [
   'Arthur', 'Enzo', 'Gabriel', 'Lucas', 'Matheus', 'Pedro', 'Felipe', 
   'Guilherme', 'Nicolas', 'Gustavo', 'Rafael', 'Daniel', 'Leonardo', 
@@ -63,9 +60,8 @@ function gerarCPF(): string {
 }
 
 async function main() {
-  console.log('🌱 Iniciando seed robusto (35+ alunos) do Centro Educacional Pequeno Príncipe...')
+  console.log('Iniciando seed...')
 
-  console.log('🧹 Limpando dados anteriores...')
   await prisma.auditLog.deleteMany()
   await prisma.eventoCalendario.deleteMany()
   await prisma.anexoComunicado.deleteMany()
@@ -95,7 +91,7 @@ async function main() {
   await prisma.usuario.deleteMany()
   await prisma.escola.deleteMany()
 
-  // 1. Configuração da escola
+  // Configuração da escola
   const escola = await prisma.escola.create({
     data: {
       id: 'escola-pqn',
@@ -115,7 +111,7 @@ async function main() {
     },
   })
 
-  // 2. Ano letivo 2026
+  // Ano letivo 2026
   const anoLetivo = await prisma.anoLetivo.create({
     data: {
       ano: 2026,
@@ -126,7 +122,7 @@ async function main() {
     },
   })
 
-  // 3. Bimestres
+  // Bimestres
   const bimestresData = [
     { id: '2026-b1', nome: '1º Bimestre', numero: 1, dataInicio: new Date('2026-02-05'), dataFim: new Date('2026-04-20') },
     { id: '2026-b2', nome: '2º Bimestre', numero: 2, dataInicio: new Date('2026-04-22'), dataFim: new Date('2026-06-30') },
@@ -139,7 +135,7 @@ async function main() {
     })
   }
 
-  // 4. Séries
+  // Séries
   const seriesData = [
     { nome: 'Maternal II', codigo: 'MAT2', nivel: 'educacao_infantil', ordem: 1 },
     { nome: 'Jardim II', codigo: 'JAR2', nivel: 'educacao_infantil', ordem: 2 },
@@ -155,7 +151,7 @@ async function main() {
     seriesIds[s.codigo] = criada.id
   }
 
-  // 5. Turmas
+  // Turmas
   const turmasIds = ['turma-mat2', 'turma-jar2', 'turma-ef1', 'turma-ef5']
   const turmasData = [
     { id: 'turma-mat2', nome: 'Maternal II A', turno: 'TARDE', capacidade: 15, sala: 'Sala A-1', serieId: seriesIds['MAT2'], anoLetivoId: anoLetivo.id },
@@ -167,7 +163,7 @@ async function main() {
     await prisma.turma.create({ data: t })
   }
 
-  // 6. Disciplinas
+  // Disciplinas
   const discData = [
     { nome: 'Língua Portuguesa', codigo: 'LP', cargaHoraria: 160 },
     { nome: 'Matemática', codigo: 'MAT', cargaHoraria: 160 },
@@ -183,7 +179,7 @@ async function main() {
     disciplinasIds[d.codigo] = criada.id
   }
 
-  // 7. Usuários Operadores
+  // Usuários Operadores
   const senhaHash = await bcrypt.hash('Escola@2026', 12)
   const userAdmin = await prisma.usuario.create({
     data: { nome: 'Juliana Castro', email: 'admin@escolapqn.com.br', senhaHash, perfil: 'ADMIN', ativo: true },
@@ -215,8 +211,7 @@ async function main() {
   await prisma.turmaDisciplina.create({ data: { turmaId: 'turma-ef5', disciplinaId: disciplinasIds['LP'], professorId: professoresIds[2] } })
   await prisma.turmaDisciplina.create({ data: { turmaId: 'turma-ef5', disciplinaId: disciplinasIds['MAT'], professorId: professoresIds[1] } })
 
-  // 8. Criação de Responsáveis (20 responsáveis)
-  console.log('👨‍👩‍👧 Cadastrando 20 responsáveis legais...')
+  // Criação de Responsáveis (20 responsáveis)
   const responsaveisIds: string[] = []
   for (let i = 0; i < RESPONSA_NOMES.length; i++) {
     const nomeResp = RESPONSA_NOMES[i]
@@ -244,8 +239,7 @@ async function main() {
     responsaveisIds.push(resp.id)
   }
 
-  // 9. Geração de Alunos (38 alunos no total)
-  console.log('👶 Matriculando 38 alunos de forma distribuída...')
+  // Geração de Alunos (38 alunos no total)
   let contMatricula = 2000
 
   for (let i = 0; i < 38; i++) {
@@ -280,7 +274,6 @@ async function main() {
       },
     })
 
-    // Vincular a um responsável aleatório
     const respId = responsaveisIds[i % responsaveisIds.length]
     await prisma.alunoResponsavel.create({
       data: { alunoId: aluno.id, responsavelId: respId, principal: true },
@@ -298,7 +291,6 @@ async function main() {
         },
       })
 
-      // Assinar Contrato
       await prisma.contratoDigital.create({
         data: {
           versao: '2026.v1',
@@ -310,7 +302,7 @@ async function main() {
         },
       })
 
-      // 10. Geração de Financeiro Completo para 2026
+      // Geração de Financeiro Completo para 2026
       const valorBase = turmaId.includes('mat2') || turmaId.includes('jar2') ? 430.0 : 540.0
       // 15% dos alunos têm algum tipo de bolsa letiva de 10% ou 20%
       const descPercentual = i % 7 === 0 ? 20.0 : i % 9 === 0 ? 10.0 : 0
@@ -372,8 +364,7 @@ async function main() {
     }
   }
 
-  // 11. Comunicados
-  console.log('📢 Publicando avisos escolares...')
+  // Comunicados
   await prisma.comunicado.create({
     data: {
       titulo: 'Retorno das Atividades Pedagógicas - Recesso de Julho',
@@ -429,7 +420,7 @@ async function main() {
     },
   })
 
-  // 12. Calendário
+  // Calendário
   const eventos = [
     { titulo: 'Retorno Escolar - 2º Semestre', dataInicio: new Date('2026-07-15'), tipo: 'evento', cor: '#1e3a8a' },
     { titulo: 'Conselho de Classe - 2º Bimestre', dataInicio: new Date('2026-07-18'), tipo: 'reuniao', cor: '#d97706' },
@@ -439,17 +430,17 @@ async function main() {
     await prisma.eventoCalendario.create({ data: { ...e, anoLetivoId: anoLetivo.id } })
   }
 
-  // 13. Auditoria
+  // Auditoria
   await prisma.auditLog.create({
     data: { tipo: 'USUARIO_CRIADO', descricao: 'Operador de sementes populou 38 alunos de teste no sistema', entidade: 'Usuario', ip: '127.0.0.1', usuarioId: userAdmin.id },
   })
 
-  console.log('✅ Seed completo com 38 alunos e histórico populado com sucesso!')
+  console.log('Seed concluído.')
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Erro no seed:', e)
+    console.error('Erro no seed:', e)
     process.exit(1)
   })
   .finally(async () => {

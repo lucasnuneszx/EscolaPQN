@@ -1,11 +1,8 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de criação de Documento Escolar — Client Component
-//
-// NOTA: não há upload de arquivo real. O campo "url" é um link de
+// Formulário de criação de documento escolar.
+// Não há upload de arquivo real. O campo "url" é um link de
 // texto livre (ex.: link do Google Drive, S3 público, etc.), pois
 // a integração com um provedor de storage ainda não foi configurada.
-// ─────────────────────────────────────────────────────────────
 import { useActionState } from 'react'
 import { useRouter } from 'next/navigation'
 import { criarDocumento, type DocumentoState } from '@/app/actions/documentos'

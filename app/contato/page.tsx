@@ -14,7 +14,7 @@ export default function ContatoPage() {
     <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-200">
       <SiteHeader paginaAtiva="/contato" />
 
-      {/* ── Hero ──────────────────────────────────────────────── */}
+      {/* Hero */}
       <section className="max-w-6xl mx-auto px-6 pt-16 pb-12">
         <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] dark:text-red-400 mb-4">
           Fale conosco
@@ -28,7 +28,7 @@ export default function ContatoPage() {
         </p>
       </section>
 
-      {/* ── Informações + Mapa ────────────────────────────────── */}
+      {/* Informações + Mapa */}
       <section className="max-w-6xl mx-auto px-6 pb-16 grid md:grid-cols-2 gap-12 items-start">
         <div>
           <address className="not-italic text-sm text-slate-500 dark:text-slate-400 leading-relaxed space-y-1 mb-6">
@@ -90,7 +90,7 @@ export default function ContatoPage() {
         </div>
       </section>
 
-      {/* ── Formulário ────────────────────────────────────────── */}
+      {/* Formulário */}
       <section className="bg-slate-50 dark:bg-slate-900/60 border-t border-slate-100 dark:border-slate-800">
         <div className="max-w-2xl mx-auto px-6 py-16">
           <p className="text-xs font-semibold uppercase tracking-widest text-[#b91c1c] dark:text-red-400 mb-3 text-center">

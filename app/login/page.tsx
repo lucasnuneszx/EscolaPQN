@@ -25,9 +25,7 @@ export default async function LoginPage({
 
   return (
     <main className="min-h-screen bg-slate-50 flex flex-col md:flex-row">
-      {/* Coluna da Esquerda: Mural Institucional (visível apenas em telas médias ou maiores) */}
       <div className="hidden md:flex md:w-1/2 relative bg-slate-900 overflow-hidden flex-col justify-between p-12 text-white">
-        {/* Imagem de Fundo com Overlay Profissional */}
         <div className="absolute inset-0 z-0">
           <Image
             src="/sala-aula.png"
@@ -39,7 +37,6 @@ export default async function LoginPage({
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-900/60 to-transparent" />
         </div>
 
-        {/* Logo / Nome no Topo */}
         <div className="relative z-10 flex items-center gap-3">
           <Image
             src="/brand/logo-pequeno-principe.jpg"
@@ -53,7 +50,6 @@ export default async function LoginPage({
           </span>
         </div>
 
-        {/* Filosofia / Citação no Centro/Base */}
         <div className="relative z-10 max-w-md mt-auto">
           <blockquote className="space-y-4">
             <p className="text-xl md:text-2xl font-light leading-relaxed text-slate-100 font-display">
@@ -65,16 +61,13 @@ export default async function LoginPage({
           </blockquote>
         </div>
 
-        {/* Rodapé da Coluna */}
         <div className="relative z-10 pt-10 text-xs text-slate-500">
           Dias d&#39;Ávila, Bahia, Brasil.
         </div>
       </div>
 
-      {/* Coluna da Direita: Formulário Limpo */}
       <div className="flex-1 flex flex-col justify-center px-6 py-12 md:px-12 lg:px-24 bg-white relative z-10">
         <div className="mx-auto w-full max-w-sm">
-          {/* Header Mobile-Only / Brand */}
           <div className="md:hidden flex items-center gap-3 mb-8">
             <Image
               src="/brand/logo-pequeno-principe.jpg"
@@ -89,7 +82,6 @@ export default async function LoginPage({
             </div>
           </div>
 
-          {/* Cabeçalho do Formulário */}
           <div className="mb-8">
             <h2 className="text-2xl font-bold text-slate-900 font-display tracking-tight">
               Acessar o portal
@@ -99,10 +91,8 @@ export default async function LoginPage({
             </p>
           </div>
 
-          {/* Form */}
           <LoginForm callbackUrl={callbackUrl} />
 
-          {/* Links e Ações Adicionais */}
           <div className="mt-8 pt-6 border-t border-slate-100 flex items-center justify-between text-xs">
             <Link
               href="/esqueci-senha"

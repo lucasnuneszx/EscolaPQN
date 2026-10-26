@@ -1,8 +1,6 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de lançamento de notas — Client Component
+// Formulário de lançamento de notas
 // Envia a Server Action `lancarNotas` com a nota de cada aluno.
-// ─────────────────────────────────────────────────────────────
 import { useActionState } from 'react'
 import { lancarNotas, type PortalActionState } from '@/app/actions/portal'
 

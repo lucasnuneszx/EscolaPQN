@@ -1,7 +1,4 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de agendamento de visita — Client Component
-// ─────────────────────────────────────────────────────────────
 import { useActionState, useState } from 'react'
 import { solicitarAgendamentoVisita, type MatriculaState } from '@/app/actions/matricula'
 import { salvarLeadRapido } from '@/app/actions/leads'

@@ -40,7 +40,6 @@ export default async function TurmasPage() {
         }
       />
 
-      {/* Grid de Turmas */}
       {turmas.length === 0 ? (
         <div className="bg-white border border-slate-200/80 rounded-xl p-16 text-center">
           <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 border border-slate-100">
@@ -78,7 +77,6 @@ export default async function TurmasPage() {
                       <span>Vagas Ocupadas</span>
                       <span>{ocupacao} / {capacidade} ({percentual}%)</span>
                     </div>
-                    {/* Barra de Progresso Corporal */}
                     <div className="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden">
                       <div
                         className={`h-full rounded-full transition-all duration-300 ${

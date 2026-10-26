@@ -61,11 +61,9 @@ export default function AlunosClientList({ alunosIniciais }: Props) {
   const [filtroSerie, setFiltroSerie] = useState('')
   const [filtroStatus, setFiltroStatus] = useState('')
   
-  // Estados do Modal
   const [alunoSelecionado, setAlunoSelecionado] = useState<Aluno | null>(null)
   const [abaAtiva, setAbaAtiva] = useState<'cadastro' | 'familia' | 'financeiro'>('cadastro')
 
-  // Filtragem no cliente para alta performance e resposta instantânea
   const alunosFiltrados = alunosIniciais.filter((aluno) => {
     const bateBusca =
       aluno.nome.toLowerCase().includes(busca.toLowerCase()) ||
@@ -78,7 +76,6 @@ export default function AlunosClientList({ alunosIniciais }: Props) {
     return bateBusca && bateSerie && bateStatus
   })
 
-  // Extrair turmas únicas para o filtro
   const turmasUnicas = Array.from(
     new Map(
       alunosIniciais.flatMap((a) => a.matriculas.map((m) => [m.turma.id, m.turma]))
@@ -199,7 +196,6 @@ export default function AlunosClientList({ alunosIniciais }: Props) {
                       </td>
                       <td className="text-right">
                         <div className="inline-flex items-center gap-1.5">
-                          {/* Botão Olho - Abrir Detalhes */}
                           <button
                             onClick={() => {
                               setAlunoSelecionado(aluno)
@@ -214,7 +210,6 @@ export default function AlunosClientList({ alunosIniciais }: Props) {
                             </svg>
                           </button>
                           
-                          {/* Editar */}
                           <Link
                             href={`/admin/alunos/editar/${aluno.id}`}
                             title="Editar cadastro"
@@ -235,12 +230,11 @@ export default function AlunosClientList({ alunosIniciais }: Props) {
         )}
       </div>
 
-      {/* ── MODAL DETALHES ALUNO (NÍVEL ENTERPRISE) ───────────── */}
+      {/* Modal de detalhes do aluno */}
       {alunoSelecionado && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
           <div className="bg-white rounded-2xl w-full max-w-3xl overflow-hidden shadow-2xl border border-slate-100 flex flex-col max-h-[85vh]">
             
-            {/* Cabeçalho do Modal */}
             <div className="bg-slate-950 text-white p-6 relative">
               <button
                 onClick={() => setAlunoSelecionado(null)}
@@ -292,7 +286,6 @@ export default function AlunosClientList({ alunosIniciais }: Props) {
               ))}
             </div>
 
-            {/* Conteúdo das Abas (Rolagem controlada) */}
             <div className="flex-1 overflow-y-auto p-6 text-sm text-slate-600">
               
               {/* ABA CADASTRO */}
@@ -429,7 +422,6 @@ export default function AlunosClientList({ alunosIniciais }: Props) {
 
             </div>
 
-            {/* Rodapé do Modal */}
             <div className="bg-slate-50 p-4 border-t border-slate-200 flex justify-end gap-3">
               <button
                 onClick={() => setAlunoSelecionado(null)}

@@ -1,6 +1,4 @@
-// ─────────────────────────────────────────────────────────────
-// Alertas financeiros do Dashboard — Estética Limpa
-// ─────────────────────────────────────────────────────────────
+// Alertas financeiros do dashboard
 import Link from 'next/link'
 
 interface ProximoVencimento {
@@ -51,7 +49,6 @@ export default function DashboardAlertasFin({ proximosVencimentos, mensalidadesV
           </Link>
         </div>
 
-        {/* Alerta de inadimplência corporativo */}
         {mensalidadesVencidas.count > 0 && (
           <div className="flex items-start justify-between gap-4 p-4 bg-red-50/40 border border-red-200/60 rounded-lg mb-5 animate-fade-in">
             <div className="flex gap-3">

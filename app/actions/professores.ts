@@ -1,8 +1,6 @@
 'use server'
-// ─────────────────────────────────────────────────────────────
 // Server Actions de Professores
 // Criar (Usuario + Professor) e atualizar
-// ─────────────────────────────────────────────────────────────
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { z } from 'zod'

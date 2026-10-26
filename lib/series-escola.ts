@@ -1,8 +1,6 @@
-// ─────────────────────────────────────────────────────────────
 // Séries e turnos oferecidos pela escola
 // Usado no cadastro/edição de aluno (seção Matrícula).
 // Todas as séries funcionam nos turnos matutino e vespertino.
-// ─────────────────────────────────────────────────────────────
 
 export const SERIES_ESCOLA = [
   { codigo: 'G2', nome: 'G2 (2 anos)', nivel: 'educacao_infantil', ordem: 1 },

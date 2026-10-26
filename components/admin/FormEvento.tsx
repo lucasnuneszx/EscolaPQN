@@ -1,7 +1,4 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de criação de Evento do Calendário — Client Component
-// ─────────────────────────────────────────────────────────────
 import { useActionState } from 'react'
 import { useRouter } from 'next/navigation'
 import { criarEvento, type EventoState } from '@/app/actions/calendario'

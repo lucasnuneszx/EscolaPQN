@@ -1,7 +1,4 @@
-// ============================================================
-// Schema Prisma — Plataforma Gestão Escolar Pequeno Príncipe
-// Banco de dados: PostgreSQL (Vercel Postgres / Neon)
-// ============================================================
+// Gestão escolar Pequeno Príncipe — PostgreSQL
 
 generator client {
   provider = "prisma-client-js"
@@ -11,9 +8,7 @@ datasource db {
   provider = "postgresql"
 }
 
-// ─────────────────────────────────────────────
 // ESCOLA E CONFIGURAÇÕES
-// ─────────────────────────────────────────────
 
 model Escola {
   id                String   @id @default(cuid())
@@ -80,9 +75,7 @@ model PeriodoAvaliativo {
   chamadas    Chamada[]
 }
 
-// ─────────────────────────────────────────────
 // USUÁRIOS E AUTENTICAÇÃO
-// ─────────────────────────────────────────────
 
 model Usuario {
   id             String         @id @default(cuid())
@@ -107,9 +100,7 @@ model Usuario {
   comunicadosEnviados Comunicado[] @relation("AutorComunicado")
 }
 
-// ─────────────────────────────────────────────
 // TURMAS E SÉRIES
-// ─────────────────────────────────────────────
 
 model Serie {
   id          String   @id @default(cuid())
@@ -144,9 +135,7 @@ model Turma {
   chamadas    Chamada[]
 }
 
-// ─────────────────────────────────────────────
 // PROFESSORES E FUNCIONÁRIOS
-// ─────────────────────────────────────────────
 
 model Professor {
   id             String   @id @default(cuid())
@@ -178,9 +167,7 @@ model Funcionario {
   atualizadoEm DateTime @updatedAt
 }
 
-// ─────────────────────────────────────────────
 // ALUNOS E RESPONSÁVEIS
-// ─────────────────────────────────────────────
 
 model Responsavel {
   id                  String   @id @default(cuid())
@@ -324,9 +311,7 @@ model ContratoDigital {
   matricula       Matricula @relation(fields: [matriculaId], references: [id])
 }
 
-// ─────────────────────────────────────────────
 // DISCIPLINAS E VÍNCULOS
-// ─────────────────────────────────────────────
 
 model Disciplina {
   id          String   @id @default(cuid())
@@ -358,9 +343,7 @@ model TurmaDisciplina {
   @@unique([turmaId, disciplinaId])
 }
 
-// ─────────────────────────────────────────────
 // NOTAS E ACADÊMICO
-// ─────────────────────────────────────────────
 
 model Nota {
   id             String         @id @default(cuid())
@@ -387,9 +370,7 @@ model Nota {
   @@unique([alunoId, turmaDisciplinaId, periodoId])
 }
 
-// ─────────────────────────────────────────────
 // FREQUÊNCIA E CHAMADA
-// ─────────────────────────────────────────────
 
 model Chamada {
   id          String   @id @default(cuid())
@@ -431,9 +412,7 @@ model Frequencia {
   @@unique([alunoId, chamadaId])
 }
 
-// ─────────────────────────────────────────────
 // FINANCEIRO (MENSALIDADES / ASAAS)
-// ─────────────────────────────────────────────
 
 model Mensalidade {
   id                String            @id @default(cuid())
@@ -483,7 +462,7 @@ model AsaasCobranca {
 model AsaasWebhookLog {
   id            String   @id @default(cuid())
   evento        String
-  payload       String   // No SQLite, campos Json podem ser mapeados como String ou processados como texto
+  payload       String   // JSON serializado em texto
   processado    Boolean  @default(false)
   erro          String?
   tentativas    Int      @default(0)
@@ -494,9 +473,7 @@ model AsaasWebhookLog {
   cobranca      AsaasCobranca? @relation(fields: [cobrancaId], references: [id])
 }
 
-// ─────────────────────────────────────────────
 // COMUNICADOS E DOCUMENTOS
-// ─────────────────────────────────────────────
 
 model Comunicado {
   id          String         @id @default(cuid())
@@ -547,7 +524,7 @@ model DocumentoEscolar {
   descricao     String?
   url           String
   categoria     String
-  visivelPara   String   // Mapeado como string no SQLite (delimitado por vírgulas ou JSON stringificado)
+  visivelPara   String   // lista serializada em texto
   mimeType      String?
   tamanhoBytes  Int?
   publicadoEm  DateTime?
@@ -555,9 +532,7 @@ model DocumentoEscolar {
   atualizadoEm DateTime  @updatedAt
 }
 
-// ─────────────────────────────────────────────
 // CALENDÁRIO DE EVENTOS
-// ─────────────────────────────────────────────
 
 model EventoCalendario {
   id          String   @id @default(cuid())
@@ -575,9 +550,7 @@ model EventoCalendario {
   anoLetivo   AnoLetivo? @relation(fields: [anoLetivoId], references: [id])
 }
 
-// ─────────────────────────────────────────────
 // AUDITORIA
-// ─────────────────────────────────────────────
 
 model AuditLog {
   id          String        @id @default(cuid())

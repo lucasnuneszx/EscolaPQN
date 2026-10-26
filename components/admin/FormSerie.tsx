@@ -1,7 +1,4 @@
 'use client'
-// ─────────────────────────────────────────────────────────────
-// Formulário de criação de Série — Client Component
-// ─────────────────────────────────────────────────────────────
 import { useActionState } from 'react'
 import { useRouter } from 'next/navigation'
 import { criarSerie, type SerieState } from '@/app/actions/academico'

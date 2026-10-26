@@ -91,7 +91,6 @@ export default async function DashboardPage() {
 
   return (
     <div className="space-y-8 animate-fade-in">
-      {/* Cabeçalho Limpo e Elegante */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-5 border-b border-slate-200/60">
         <div>
           <h1 className="text-xl font-bold text-slate-900 font-display tracking-tight">
@@ -109,10 +108,8 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Métricas principais (Novo layout limpo) */}
       <DashboardStats dados={dados} />
 
-      {/* Seção Central de Dados */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <DashboardAlertasFin
           proximosVencimentos={dados.proximosVencimentos}
@@ -164,7 +161,6 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* Acessos rápidos refinados (sem gradientes ou boxes coloridos exagerados) */}
       <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-6">
         <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-4">
           Ações rápidas do sistema

@@ -59,7 +59,6 @@ export default async function ProfessoresPage() {
         }
       />
 
-      {/* Renderiza o componente cliente interativo com o modal de detalhes */}
       <ProfessoresClientList professoresIniciais={professores} />
     </div>
   )

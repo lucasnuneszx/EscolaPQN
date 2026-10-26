@@ -25,10 +25,8 @@ export default async function PortalLayout({
 
   return (
     <div className="flex h-screen bg-slate-50 overflow-hidden">
-      {/* Sidebar fixa à esquerda */}
       <PortalSidebar perfil={sessao.perfil} />
 
-      {/* Conteúdo principal */}
       <div className="flex-1 flex flex-col overflow-hidden">
         <PortalTopbar sessao={sessao} />
         <main className="flex-1 overflow-y-auto p-6">

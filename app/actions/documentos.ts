@@ -1,13 +1,11 @@
 'use server'
-// ─────────────────────────────────────────────────────────────
 // Server Actions — Repositório de Documentos Escolares
 //
-// NOTA IMPORTANTE: não há integração real de upload/storage aqui.
+// Não há integração de upload/storage aqui.
 // O campo `url` é um link de texto livre colado manualmente pelo
 // operador. Uma integração real com um provedor de storage (S3,
 // R2, etc.) ainda não foi configurada (ver placeholders em
 // .env.local — STORAGE_PROVIDER, STORAGE_BUCKET, ...).
-// ─────────────────────────────────────────────────────────────
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'

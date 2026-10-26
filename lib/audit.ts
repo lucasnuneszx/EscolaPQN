@@ -1,6 +1,4 @@
-// ─────────────────────────────────────────────────────────────
 // Auditoria — helper compartilhado para registrar AuditLog
-// ─────────────────────────────────────────────────────────────
 import 'server-only'
 import { prisma } from '@/lib/prisma'
 

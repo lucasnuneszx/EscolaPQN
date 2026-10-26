@@ -1,7 +1,5 @@
 'use server'
-// ─────────────────────────────────────────────────────────────
 // Server Actions — Mural de Comunicados
-// ─────────────────────────────────────────────────────────────
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
@@ -10,7 +8,7 @@ import { getSession } from '@/lib/session'
 import { temPermissao } from '@/lib/rbac'
 import { registrarAuditoria } from '@/lib/audit'
 
-// ─── Esquema de validação ────────────────────────────────────
+// Esquema de validação
 
 const ComunicadoSchema = z
   .object({
@@ -56,7 +54,7 @@ function extrairDados(formData: FormData) {
   }
 }
 
-// ─── Criar ────────────────────────────────────────────────────
+// Criar
 
 export async function criarComunicado(
   prevState: ComunicadoState,
@@ -112,7 +110,7 @@ export async function criarComunicado(
   redirect('/admin/comunicados')
 }
 
-// ─── Atualizar ────────────────────────────────────────────────
+// Atualizar
 
 export async function atualizarComunicado(
   id: string,
@@ -171,7 +169,7 @@ export async function atualizarComunicado(
   redirect('/admin/comunicados')
 }
 
-// ─── Excluir ──────────────────────────────────────────────────
+// Excluir
 
 export async function excluirComunicado(id: string, _formData: FormData): Promise<void> {
   const sessao = await getSession()

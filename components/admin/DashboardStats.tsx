@@ -1,6 +1,4 @@
-// ─────────────────────────────────────────────────────────────
-// Cards de métricas do Dashboard — Design Editorial Premium
-// ─────────────────────────────────────────────────────────────
+// Cards de métricas do dashboard
 
 interface DashboardData {
   totalAlunosAtivos: number
@@ -29,7 +27,6 @@ interface StatCardProps {
 }
 
 function StatCard({ titulo, valor, subtitulo, tipo = 'neutral' }: StatCardProps) {
-  // Ajuste fino de cores com base no tipo sem ser espalhafatoso
   const borderColors = {
     neutral: 'border-slate-200/80',
     success: 'border-slate-200/80 border-t-emerald-600 border-t-[3px]',

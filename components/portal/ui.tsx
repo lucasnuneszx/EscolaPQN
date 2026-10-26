@@ -1,6 +1,4 @@
-// ─────────────────────────────────────────────────────────────
 // Peças de UI compartilhadas do Portal (Server Components — sem estado)
-// ─────────────────────────────────────────────────────────────
 
 export function formatarReais(valor: number): string {
   return new Intl.NumberFormat('pt-BR', {

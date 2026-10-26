@@ -55,7 +55,6 @@ export default async function ResponsaveisPage() {
         </div>
       </div>
 
-      {/* Grid de Dados / Tabela */}
       <div className="bg-white border border-slate-200/80 rounded-xl overflow-hidden">
         {responsaveis.length === 0 ? (
             <EmptyState

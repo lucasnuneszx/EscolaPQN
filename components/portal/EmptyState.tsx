@@ -1,7 +1,5 @@
-// ─────────────────────────────────────────────────────────────
-// Estado vazio elegante — usado em todo o portal quando não há
+// Estado vazio usado em todo o portal quando não há
 // dados ou vínculo para o usuário logado.
-// ─────────────────────────────────────────────────────────────
 
 interface EmptyStateProps {
   titulo?: string
