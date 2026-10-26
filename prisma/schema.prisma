@@ -1,0 +1,596 @@
+// ============================================================
+// Schema Prisma — Plataforma Gestão Escolar Pequeno Príncipe
+// Banco de dados: PostgreSQL (Vercel Postgres / Neon)
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ─────────────────────────────────────────────
+// ESCOLA E CONFIGURAÇÕES
+// ─────────────────────────────────────────────
+
+model Escola {
+  id                String   @id @default(cuid())
+  nome              String
+  cnpj              String?  @unique
+  emailContato      String?
+  telefone          String?
+  whatsapp          String?
+  endereco          String?
+  cidade            String   @default("Dias d'Ávila")
+  estado            String   @default("BA")
+  cep               String?
+  logoUrl           String?
+  corPrimaria       String   @default("#1E40AF")
+  corSecundaria     String   @default("#F59E0B")
+  descricao         String?
+  missao            String?
+  visao             String?
+  valores           String?
+  diaVencimentoPadrao Int    @default(10)
+  multaPercentual   Float    @default(2.0)
+  jurosPercentual   Float    @default(1.0)
+  asaasWalletId     String?
+  politicaPrivacidadeUrl String?
+  termosUsoUrl      String?
+  criadoEm          DateTime @default(now())
+  atualizadoEm      DateTime @updatedAt
+
+  anoLetivos        AnoLetivo[]
+}
+
+model AnoLetivo {
+  id          String   @id @default(cuid())
+  ano         Int      @unique
+  ativo       Boolean  @default(true)
+  dataInicio  DateTime
+  dataFim     DateTime
+  criadoEm   DateTime  @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  escolaId    String
+  escola      Escola   @relation(fields: [escolaId], references: [id])
+
+  turmas      Turma[]
+  periodos    PeriodoAvaliativo[]
+  eventos     EventoCalendario[]
+  comunicados Comunicado[]
+}
+
+model PeriodoAvaliativo {
+  id          String   @id @default(cuid())
+  nome        String
+  numero      Int
+  dataInicio  DateTime
+  dataFim     DateTime
+  ativo       Boolean  @default(true)
+  criadoEm   DateTime  @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  anoLetivoId String
+  anoLetivo   AnoLetivo @relation(fields: [anoLetivoId], references: [id])
+
+  notas       Nota[]
+  chamadas    Chamada[]
+}
+
+// ─────────────────────────────────────────────
+// USUÁRIOS E AUTENTICAÇÃO
+// ─────────────────────────────────────────────
+
+model Usuario {
+  id             String         @id @default(cuid())
+  nome           String
+  email          String         @unique
+  senhaHash      String
+  perfil         String         // "ADMIN" | "SECRETARIA" | "PROFESSOR" | "RESPONSAVEL" | "ALUNO"
+  ativo          Boolean        @default(true)
+  avatarUrl      String?
+  telefone       String?
+  resetToken     String?        @unique
+  resetTokenExp  DateTime?
+  twoFactorAtivo Boolean        @default(false)
+  twoFactorSecret String?
+  ultimoAcesso   DateTime?
+  criadoEm      DateTime        @default(now())
+  atualizadoEm  DateTime        @updatedAt
+
+  professor      Professor?
+  responsavel    Responsavel?
+  auditLogs      AuditLog[]     @relation("UsuarioAuditoria")
+  comunicadosEnviados Comunicado[] @relation("AutorComunicado")
+}
+
+// ─────────────────────────────────────────────
+// TURMAS E SÉRIES
+// ─────────────────────────────────────────────
+
+model Serie {
+  id          String   @id @default(cuid())
+  nome        String
+  codigo      String   @unique
+  nivel       String
+  ordem       Int
+  criadoEm   DateTime  @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  turmas      Turma[]
+}
+
+model Turma {
+  id          String   @id @default(cuid())
+  nome        String
+  turno       String   // "MANHA" | "TARDE" | "INTEGRAL" | "NOTURNO"
+  capacidade  Int      @default(30)
+  sala        String?
+  criadoEm   DateTime  @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  serieId     String
+  serie       Serie    @relation(fields: [serieId], references: [id])
+
+  anoLetivoId String
+  anoLetivo   AnoLetivo @relation(fields: [anoLetivoId], references: [id])
+
+  matriculas  Matricula[]
+  disciplinas TurmaDisciplina[]
+  comunicados ComunicadoTurma[]
+  chamadas    Chamada[]
+}
+
+// ─────────────────────────────────────────────
+// PROFESSORES E FUNCIONÁRIOS
+// ─────────────────────────────────────────────
+
+model Professor {
+  id             String   @id @default(cuid())
+  cpf            String?  @unique
+  formacao       String?
+  registro       String?
+  observacoes    String?
+  criadoEm      DateTime  @default(now())
+  atualizadoEm  DateTime  @updatedAt
+
+  usuarioId      String   @unique
+  usuario        Usuario  @relation(fields: [usuarioId], references: [id])
+
+  disciplinas    TurmaDisciplina[]
+  notasLancadas  Nota[]
+  chamadasFeitas Chamada[]
+}
+
+model Funcionario {
+  id          String   @id @default(cuid())
+  nome        String
+  cpf         String?  @unique
+  email       String?
+  telefone    String?
+  cargo       String
+  ativo       Boolean  @default(true)
+  observacoes String?
+  criadoEm   DateTime  @default(now())
+  atualizadoEm DateTime @updatedAt
+}
+
+// ─────────────────────────────────────────────
+// ALUNOS E RESPONSÁVEIS
+// ─────────────────────────────────────────────
+
+model Responsavel {
+  id                  String   @id @default(cuid())
+  nome                String
+  cpf                 String?  @unique
+  rg                  String?
+  dataNascimento      DateTime?
+  email               String?
+  telefone            String
+  whatsapp            String?
+  parentesco          String
+  responsavelFinanceiro Boolean @default(false)
+  responsavelPedagogico Boolean @default(true)
+  endereco            String?
+  asaasCustomerId     String?  @unique
+  consentimentoImagem Boolean  @default(false)
+  consentimentoLGPD   Boolean  @default(false)
+  consentimentoDataHora DateTime?
+  criadoEm           DateTime  @default(now())
+  atualizadoEm       DateTime  @updatedAt
+
+  usuarioId           String?  @unique
+  usuario             Usuario? @relation(fields: [usuarioId], references: [id])
+
+  vinculos            AlunoResponsavel[]
+  mensalidades        Mensalidade[]
+}
+
+model Aluno {
+  id                String       @id @default(cuid())
+  nome              String
+  nomeSocial        String?
+  cpf               String?      @unique
+  rg                String?
+  certidaoNascimento String?
+  dataNascimento    DateTime
+  sexo              String?
+  foto              String?
+  status            String       @default("PENDENTE") // "ATIVO" | "INATIVO" | "TRANSFERIDO" | "TRANCADO" | "PENDENTE"
+  observacoes       String?
+  endereco          String?
+  cidade            String?
+  estado            String?
+  cep               String?
+  escolaAnterior    String?
+  alergias          String?
+  necessidadesEspeciais String?
+  planoDeSaude      String?
+  consentimentoImagem Boolean    @default(false)
+  criadoEm         DateTime      @default(now())
+  atualizadoEm     DateTime      @updatedAt
+
+  responsaveis      AlunoResponsavel[]
+  matriculas        Matricula[]
+  documentos        DocumentoAluno[]
+  mensalidades      Mensalidade[]
+  notas             Nota[]
+  frequencias       Frequencia[]
+  formularios       FormularioMatricula[]
+}
+
+model AlunoResponsavel {
+  id            String   @id @default(cuid())
+  principal     Boolean  @default(false)
+
+  alunoId       String
+  aluno         Aluno    @relation(fields: [alunoId], references: [id])
+
+  responsavelId String
+  responsavel   Responsavel @relation(fields: [responsavelId], references: [id])
+
+  @@unique([alunoId, responsavelId])
+}
+
+model Matricula {
+  id            String         @id @default(cuid())
+  numero        String         @unique
+  status        String         @default("ATIVA") // "INTERESSE" | "PRE_MATRICULA" | "ATIVA" | "CANCELADA"
+  dataEfetivacao DateTime?
+  observacoes   String?
+  criadoEm     DateTime        @default(now())
+  atualizadoEm DateTime        @updatedAt
+
+  alunoId       String
+  aluno         Aluno          @relation(fields: [alunoId], references: [id])
+
+  turmaId       String
+  turma         Turma          @relation(fields: [turmaId], references: [id])
+
+  contratosAssinados ContratoDigital[]
+
+  @@unique([alunoId, turmaId])
+}
+
+model FormularioMatricula {
+  id                  String   @id @default(cuid())
+  tipo                String   @default("MATRICULA") // "MATRICULA" | "VISITA" | "CONTATO" | "WHATSAPP_EXPRESS"
+  nomeResponsavel     String
+  emailResponsavel    String?
+  telefone            String
+  nomeAluno           String?
+  idadeAluno          Int?
+  serieInteresse      String?
+  turnoPreferido      String?
+  mensagem            String?
+  ip                  String?
+  status              String   @default("NOVO") // "NOVO" | "CONTATADO" | "EM_NEGOCIACAO" | "MATRICULADO" | "ARQUIVADO"
+  lido                Boolean  @default(false)
+  observacoesInternas String?
+  criadoEm           DateTime @default(now())
+  atualizadoEm       DateTime @updatedAt @default(now())
+
+  alunoId             String?
+  aluno               Aluno?   @relation(fields: [alunoId], references: [id])
+}
+
+model DocumentoAluno {
+  id          String   @id @default(cuid())
+  nome        String
+  url         String
+  tamanhoBytes Int?
+  mimeType    String?
+  observacoes String?
+  criadoEm   DateTime  @default(now())
+
+  alunoId     String
+  aluno       Aluno    @relation(fields: [alunoId], references: [id])
+}
+
+model ContratoDigital {
+  id              String   @id @default(cuid())
+  versao          String
+  textoContrato   String
+  aceiteData      DateTime?
+  aceiteIp        String?
+  aceiteUserAgent String?
+  assinado        Boolean  @default(false)
+  criadoEm       DateTime  @default(now())
+
+  matriculaId     String
+  matricula       Matricula @relation(fields: [matriculaId], references: [id])
+}
+
+// ─────────────────────────────────────────────
+// DISCIPLINAS E VÍNCULOS
+// ─────────────────────────────────────────────
+
+model Disciplina {
+  id          String   @id @default(cuid())
+  nome        String
+  codigo      String   @unique
+  cargaHoraria Int?
+  criadoEm   DateTime  @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  turmas      TurmaDisciplina[]
+}
+
+model TurmaDisciplina {
+  id          String   @id @default(cuid())
+  criadoEm   DateTime  @default(now())
+
+  turmaId     String
+  turma       Turma    @relation(fields: [turmaId], references: [id])
+
+  disciplinaId String
+  disciplina  Disciplina @relation(fields: [disciplinaId], references: [id])
+
+  professorId String?
+  professor   Professor? @relation(fields: [professorId], references: [id])
+
+  notas       Nota[]
+  frequencias Frequencia[]
+
+  @@unique([turmaId, disciplinaId])
+}
+
+// ─────────────────────────────────────────────
+// NOTAS E ACADÊMICO
+// ─────────────────────────────────────────────
+
+model Nota {
+  id             String         @id @default(cuid())
+  valor          Float?
+  valorMaximo    Float          @default(10.0)
+  observacoes    String?
+  criadoEm      DateTime        @default(now())
+  atualizadoEm  DateTime        @updatedAt
+
+  alunoId        String
+  aluno          Aluno          @relation(fields: [alunoId], references: [id])
+
+  turmaDisciplinaId String
+  turmaDisciplina  TurmaDisciplina @relation(fields: [turmaDisciplinaId], references: [id])
+
+  periodoId      String
+  periodo        PeriodoAvaliativo @relation(fields: [periodoId], references: [id])
+
+  professorId    String?
+  professor      Professor?     @relation(fields: [professorId], references: [id])
+
+  statusAcademico String?
+
+  @@unique([alunoId, turmaDisciplinaId, periodoId])
+}
+
+// ─────────────────────────────────────────────
+// FREQUÊNCIA E CHAMADA
+// ─────────────────────────────────────────────
+
+model Chamada {
+  id          String   @id @default(cuid())
+  data        DateTime
+  criadoEm   DateTime  @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  turmaId     String
+  turma       Turma    @relation(fields: [turmaId], references: [id])
+
+  periodoId   String
+  periodo     PeriodoAvaliativo @relation(fields: [periodoId], references: [id])
+
+  professorId String?
+  professor   Professor? @relation(fields: [professorId], references: [id])
+
+  frequencias Frequencia[]
+
+  @@unique([turmaId, data])
+}
+
+model Frequencia {
+  id             String         @id @default(cuid())
+  status         String         @default("PRESENTE") // "PRESENTE" | "FALTA" | "FALTA_JUSTIFICADA"
+  justificativa  String?
+  atestadoUrl    String?
+  criadoEm      DateTime        @default(now())
+  atualizadoEm  DateTime        @updatedAt
+
+  alunoId        String
+  aluno          Aluno          @relation(fields: [alunoId], references: [id])
+
+  chamadaId      String
+  chamada        Chamada        @relation(fields: [chamadaId], references: [id])
+
+  turmaDisciplinaId String?
+  turmaDisciplina  TurmaDisciplina? @relation(fields: [turmaDisciplinaId], references: [id])
+
+  @@unique([alunoId, chamadaId])
+}
+
+// ─────────────────────────────────────────────
+// FINANCEIRO (MENSALIDADES / ASAAS)
+// ─────────────────────────────────────────────
+
+model Mensalidade {
+  id                String            @id @default(cuid())
+  referencia        String
+  valorBase         Float
+  valorDesconto     Float             @default(0)
+  tipoDesconto      String?
+  valorFinal        Float
+  dataVencimento    DateTime
+  status            String            @default("PENDENTE") // "PENDENTE" | "PAGO" | "VENCIDO" | "CANCELADO"
+  dataPagamento     DateTime?
+  valorPago         Float?
+  observacoes       String?
+  criadoEm         DateTime           @default(now())
+  atualizadoEm     DateTime           @updatedAt
+
+  alunoId           String
+  aluno             Aluno             @relation(fields: [alunoId], references: [id])
+
+  responsavelId     String?
+  responsavel       Responsavel?      @relation(fields: [responsavelId], references: [id])
+
+  cobranças         AsaasCobranca[]
+}
+
+model AsaasCobranca {
+  id              String      @id @default(cuid())
+  asaasId         String      @unique
+  tipo            String      // "BOLETO" | "PIX" | "CARTAO_CREDITO"
+  status          String
+  urlBoleto       String?
+  urlPixQrCode    String?
+  pixCopiaCola    String?
+  urlPagamento    String?
+  dataVencimento  DateTime
+  valorCobranca   Float
+  nossoNumero     String?
+  ultimoWebhook   DateTime?
+  webhookEventos  AsaasWebhookLog[]
+  criadoEm       DateTime     @default(now())
+  atualizadoEm   DateTime     @updatedAt
+
+  mensalidadeId   String
+  mensalidade     Mensalidade @relation(fields: [mensalidadeId], references: [id])
+}
+
+model AsaasWebhookLog {
+  id            String   @id @default(cuid())
+  evento        String
+  payload       String   // No SQLite, campos Json podem ser mapeados como String ou processados como texto
+  processado    Boolean  @default(false)
+  erro          String?
+  tentativas    Int      @default(0)
+  criadoEm     DateTime  @default(now())
+  processadoEm DateTime?
+
+  cobrancaId    String?
+  cobranca      AsaasCobranca? @relation(fields: [cobrancaId], references: [id])
+}
+
+// ─────────────────────────────────────────────
+// COMUNICADOS E DOCUMENTOS
+// ─────────────────────────────────────────────
+
+model Comunicado {
+  id          String         @id @default(cuid())
+  titulo      String
+  conteudo    String
+  tipo        String         @default("GERAL") // "GERAL" | "TURMA" | "INDIVIDUAL"
+  fixado      Boolean        @default(false)
+  publicadoEm DateTime?
+  expiracaoEm DateTime?
+  criadoEm   DateTime        @default(now())
+  atualizadoEm DateTime      @updatedAt
+
+  autorId     String
+  autor       Usuario        @relation("AutorComunicado", fields: [autorId], references: [id])
+
+  anoLetivoId String?
+  anoLetivo   AnoLetivo?     @relation(fields: [anoLetivoId], references: [id])
+
+  turmas      ComunicadoTurma[]
+  anexos      AnexoComunicado[]
+}
+
+model ComunicadoTurma {
+  comunicadoId String
+  comunicado   Comunicado @relation(fields: [comunicadoId], references: [id])
+
+  turmaId      String
+  turma        Turma      @relation(fields: [turmaId], references: [id])
+
+  @@id([comunicadoId, turmaId])
+}
+
+model AnexoComunicado {
+  id            String   @id @default(cuid())
+  nome          String
+  url           String
+  mimeType      String?
+  tamanhoBytes  Int?
+  criadoEm     DateTime  @default(now())
+
+  comunicadoId  String
+  comunicado    Comunicado @relation(fields: [comunicadoId], references: [id])
+}
+
+model DocumentoEscolar {
+  id            String   @id @default(cuid())
+  titulo        String
+  descricao     String?
+  url           String
+  categoria     String
+  visivelPara   String   // Mapeado como string no SQLite (delimitado por vírgulas ou JSON stringificado)
+  mimeType      String?
+  tamanhoBytes  Int?
+  publicadoEm  DateTime?
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+}
+
+// ─────────────────────────────────────────────
+// CALENDÁRIO DE EVENTOS
+// ─────────────────────────────────────────────
+
+model EventoCalendario {
+  id          String   @id @default(cuid())
+  titulo      String
+  descricao   String?
+  dataInicio  DateTime
+  dataFim     DateTime?
+  local       String?
+  tipo        String
+  cor         String?
+  criadoEm   DateTime  @default(now())
+  atualizadoEm DateTime @updatedAt
+
+  anoLetivoId String?
+  anoLetivo   AnoLetivo? @relation(fields: [anoLetivoId], references: [id])
+}
+
+// ─────────────────────────────────────────────
+// AUDITORIA
+// ─────────────────────────────────────────────
+
+model AuditLog {
+  id          String        @id @default(cuid())
+  tipo        String        // ex.: "USUARIO_CRIADO"
+  descricao   String
+  entidade    String
+  entidadeId  String?
+  dadosAntes  String?       // JSON serializado em texto
+  dadosDepois String?       // JSON serializado em texto
+  ip          String?
+  userAgent   String?
+  criadoEm   DateTime       @default(now())
+
+  usuarioId   String?
+  usuario     Usuario?      @relation("UsuarioAuditoria", fields: [usuarioId], references: [id])
+}
