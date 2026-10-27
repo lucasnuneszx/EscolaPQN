@@ -98,6 +98,7 @@ model Usuario {
   responsavel    Responsavel?
   auditLogs      AuditLog[]     @relation("UsuarioAuditoria")
   comunicadosEnviados Comunicado[] @relation("AutorComunicado")
+  depoimentos    Depoimento[]
 }
 
 // TURMAS E SÉRIES
@@ -217,6 +218,8 @@ model Aluno {
   necessidadesEspeciais String?
   planoDeSaude      String?
   consentimentoImagem Boolean    @default(false)
+  valorMensalidade  Float?
+  descontoMensalidade Float      @default(0)
   criadoEm         DateTime      @default(now())
   atualizadoEm     DateTime      @updatedAt
 
@@ -548,6 +551,22 @@ model EventoCalendario {
 
   anoLetivoId String?
   anoLetivo   AnoLetivo? @relation(fields: [anoLetivoId], references: [id])
+}
+
+// DEPOIMENTOS
+
+model Depoimento {
+  id           String    @id @default(cuid())
+  nome         String
+  relacao      String
+  texto        String
+  status       String    @default("PENDENTE") // "PENDENTE" | "APROVADO" | "REJEITADO"
+  aprovadoEm   DateTime?
+  criadoEm     DateTime  @default(now())
+  atualizadoEm DateTime  @updatedAt
+
+  usuarioId    String?
+  usuario      Usuario?  @relation(fields: [usuarioId], references: [id])
 }
 
 // AUDITORIA

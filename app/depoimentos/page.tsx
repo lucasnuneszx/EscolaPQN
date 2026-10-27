@@ -2,6 +2,9 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import SiteHeader from '@/components/public/SiteHeader'
 import SiteFooter from '@/components/public/SiteFooter'
+import { prisma } from '@/lib/prisma'
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: 'Depoimentos',
@@ -66,7 +69,24 @@ const DEPOIMENTOS = [
   },
 ]
 
-export default function DepoimentosPage() {
+async function obterDepoimentosAprovados() {
+  try {
+    const aprovados = await prisma.depoimento.findMany({
+      where: { status: 'APROVADO' },
+      orderBy: { aprovadoEm: 'desc' },
+      select: { id: true, nome: true, relacao: true, texto: true },
+    })
+    return aprovados.map((d) => ({ chave: d.id, nome: d.nome, relacao: d.relacao, citacao: d.texto }))
+  } catch {
+    return []
+  }
+}
+
+export default async function DepoimentosPage() {
+  const aprovados = await obterDepoimentosAprovados()
+  const depoimentos =
+    aprovados.length > 0 ? aprovados : DEPOIMENTOS.map((d) => ({ chave: d.nome, ...d }))
+
   return (
     <div className="min-h-screen bg-white text-slate-800">
       <SiteHeader paginaAtiva="/depoimentos" />
@@ -88,8 +108,8 @@ export default function DepoimentosPage() {
       {/* Grid de depoimentos */}
       <section className="max-w-6xl mx-auto px-6 pb-20">
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {DEPOIMENTOS.map(({ nome, relacao, citacao }) => (
-            <div key={nome} className="bg-white border border-slate-200 rounded-xl p-6 flex flex-col">
+          {depoimentos.map(({ chave, nome, relacao, citacao }) => (
+            <div key={chave} className="bg-white border border-slate-200 rounded-xl p-6 flex flex-col">
               <svg className="w-6 h-6 text-[#b91c1c]/30 mb-4" fill="currentColor" viewBox="0 0 24 24">
                 <path d="M7.17 6A5.17 5.17 0 002 11.17V18h6.83v-6.83H4.5c0-1.473 1.197-2.67 2.67-2.67V6zm10 0A5.17 5.17 0 0012 11.17V18h6.83v-6.83H14.5c0-1.473 1.197-2.67 2.67-2.67V6z" />
               </svg>

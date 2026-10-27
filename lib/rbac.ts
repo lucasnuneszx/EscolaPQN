@@ -47,6 +47,10 @@ const PERMISSOES: Record<string, PerfilUsuario[]> = {
   'comunicados:criar':  ['ADMIN', 'SECRETARIA', 'PROFESSOR'],
   'comunicados:ver':    ['ADMIN', 'SECRETARIA', 'PROFESSOR', 'RESPONSAVEL', 'ALUNO'],
 
+  // Depoimentos
+  'depoimentos:enviar':  ['RESPONSAVEL'],
+  'depoimentos:moderar': ['ADMIN', 'SECRETARIA'],
+
   // Portal (responsável/aluno)
   'portal:acesso':      ['ADMIN', 'SECRETARIA', 'PROFESSOR', 'RESPONSAVEL', 'ALUNO'],
 

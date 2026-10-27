@@ -1,11 +1,13 @@
 'use client'
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { criarMensalidade, type FinanceiroState } from '@/app/actions/financeiro'
 
 interface AlunoOpcao {
   id: string
   nome: string
+  valorMensalidade: number | null
+  descontoMensalidade: number
 }
 
 interface FormNovaCobrancaProps {
@@ -20,6 +22,16 @@ export default function FormNovaCobranca({ alunos }: FormNovaCobrancaProps) {
   )
 
   const referenciaAtual = new Date().toISOString().slice(0, 7)
+  const [valorBase, setValorBase] = useState('')
+  const [valorDesconto, setValorDesconto] = useState('0')
+
+  function aoSelecionarAluno(alunoId: string) {
+    const aluno = alunos.find((a) => a.id === alunoId)
+    if (aluno?.valorMensalidade) {
+      setValorBase(String(aluno.valorMensalidade))
+      setValorDesconto(String(aluno.descontoMensalidade ?? 0))
+    }
+  }
 
   return (
     <form action={formAction} className="space-y-5">
@@ -40,6 +52,7 @@ export default function FormNovaCobranca({ alunos }: FormNovaCobrancaProps) {
           id="alunoId"
           name="alunoId"
           required
+          onChange={(e) => aoSelecionarAluno(e.target.value)}
           className={`input ${state?.errors?.alunoId ? 'input-error' : ''}`}
           disabled={pending}
         >
@@ -104,6 +117,8 @@ export default function FormNovaCobranca({ alunos }: FormNovaCobrancaProps) {
             type="number"
             min={0}
             step={0.01}
+            value={valorBase}
+            onChange={(e) => setValorBase(e.target.value)}
             required
             className={`input ${state?.errors?.valorBase ? 'input-error' : ''}`}
             disabled={pending}
@@ -122,7 +137,8 @@ export default function FormNovaCobranca({ alunos }: FormNovaCobrancaProps) {
             type="number"
             min={0}
             step={0.01}
-            defaultValue={0}
+            value={valorDesconto}
+            onChange={(e) => setValorDesconto(e.target.value)}
             className={`input ${state?.errors?.valorDesconto ? 'input-error' : ''}`}
             disabled={pending}
           />

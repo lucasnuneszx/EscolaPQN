@@ -43,6 +43,8 @@ interface AlunoInicial {
   planoDeSaude: string | null
   observacoes: string | null
   consentimentoImagem: boolean
+  valorMensalidade: number | null
+  descontoMensalidade: number
   matriculaAtivaTurmaId?: string
   matriculaAtivaSerieCodigo?: string
   matriculaAtivaTurno?: string
@@ -366,6 +368,47 @@ export default function FormAluno({ turmas, responsaveis, alunoInicial }: Props)
               : modoEdicao
                 ? 'Escolha uma série para transferir o aluno de turma.'
                 : 'Escolha a série e o turno para efetivar a matrícula.'}
+          </p>
+        </div>
+
+        {/* Mensalidade */}
+        <div className="bg-white border border-slate-200/80 rounded-xl p-6 space-y-4">
+          <h2 className="text-sm font-bold text-slate-900 font-display">Mensalidade</h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="label" htmlFor="valorMensalidade">Valor da mensalidade (R$)</label>
+              <input
+                id="valorMensalidade"
+                name="valorMensalidade"
+                type="number"
+                min={0}
+                step={0.01}
+                defaultValue={alunoInicial?.valorMensalidade ?? ''}
+                className={`input ${state?.errors?.valorMensalidade ? 'input-error' : ''}`}
+                disabled={pending}
+              />
+              {state?.errors?.valorMensalidade && <p className="text-xs text-red-600 mt-1">{state.errors.valorMensalidade[0]}</p>}
+            </div>
+            <div>
+              <label className="label" htmlFor="descontoMensalidade">Desconto fixo (R$)</label>
+              <input
+                id="descontoMensalidade"
+                name="descontoMensalidade"
+                type="number"
+                min={0}
+                step={0.01}
+                defaultValue={alunoInicial?.descontoMensalidade || ''}
+                placeholder="Ex.: bolsa ou desconto de irmão"
+                className={`input ${state?.errors?.descontoMensalidade ? 'input-error' : ''}`}
+                disabled={pending}
+              />
+              {state?.errors?.descontoMensalidade && <p className="text-xs text-red-600 mt-1">{state.errors.descontoMensalidade[0]}</p>}
+            </div>
+          </div>
+
+          <p className="text-xs text-slate-400">
+            Usado ao gerar as mensalidades do mês em lote. Deixe em branco se o aluno não paga mensalidade.
           </p>
         </div>
 

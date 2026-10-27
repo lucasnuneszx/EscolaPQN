@@ -18,6 +18,13 @@ function textoOpcional(v: FormDataEntryValue | null): string | undefined {
   return s.length > 0 ? s : undefined
 }
 
+function valorOpcional(v: FormDataEntryValue | null): number | undefined {
+  const s = typeof v === 'string' ? v.trim().replace(',', '.') : ''
+  if (!s) return undefined
+  const n = Number(s)
+  return Number.isFinite(n) ? n : Number.NaN
+}
+
 function boolCheckbox(v: FormDataEntryValue | null): boolean {
   return v === 'on' || v === 'true' || v === '1'
 }
@@ -48,6 +55,8 @@ const AlunoBaseSchema = z.object({
   planoDeSaude: z.string().trim().optional(),
   observacoes: z.string().trim().optional(),
   consentimentoImagem: z.boolean().optional(),
+  valorMensalidade: z.number({ message: 'Informe um valor válido.' }).min(0, { message: 'Informe um valor válido.' }).optional(),
+  descontoMensalidade: z.number({ message: 'Informe um desconto válido.' }).min(0, { message: 'Informe um desconto válido.' }).optional(),
 })
 
 const CriarAlunoSchema = AlunoBaseSchema.extend({
@@ -171,6 +180,8 @@ export async function criarAluno(
     planoDeSaude: textoOpcional(formData.get('planoDeSaude')),
     observacoes: textoOpcional(formData.get('observacoes')),
     consentimentoImagem: boolCheckbox(formData.get('consentimentoImagem')),
+    valorMensalidade: valorOpcional(formData.get('valorMensalidade')),
+    descontoMensalidade: valorOpcional(formData.get('descontoMensalidade')),
     turmaId: textoOpcional(formData.get('turmaId')),
     serieCodigo: textoOpcional(formData.get('serieCodigo')),
     turno: textoOpcional(formData.get('turno')),
@@ -192,6 +203,10 @@ export async function criarAluno(
   }
 
   const data = validated.data
+
+  if ((data.descontoMensalidade ?? 0) > (data.valorMensalidade ?? 0) && data.descontoMensalidade) {
+    return { errors: { descontoMensalidade: ['O desconto não pode ser maior que a mensalidade.'] } }
+  }
 
   // Validações condicionais do bloco de responsável
   if (data.responsavelModo === 'existente' && !data.responsavelId) {
@@ -231,6 +246,8 @@ export async function criarAluno(
           planoDeSaude: data.planoDeSaude,
           observacoes: data.observacoes,
           consentimentoImagem: data.consentimentoImagem ?? false,
+          valorMensalidade: data.valorMensalidade ?? null,
+          descontoMensalidade: data.descontoMensalidade ?? 0,
         },
       })
 
@@ -334,6 +351,8 @@ export async function atualizarAluno(
     planoDeSaude: textoOpcional(formData.get('planoDeSaude')),
     observacoes: textoOpcional(formData.get('observacoes')),
     consentimentoImagem: boolCheckbox(formData.get('consentimentoImagem')),
+    valorMensalidade: valorOpcional(formData.get('valorMensalidade')),
+    descontoMensalidade: valorOpcional(formData.get('descontoMensalidade')),
     turmaId: textoOpcional(formData.get('turmaId')),
     serieCodigo: textoOpcional(formData.get('serieCodigo')),
     turno: textoOpcional(formData.get('turno')),
@@ -344,6 +363,10 @@ export async function atualizarAluno(
   }
 
   const { id, turmaId: turmaIdForm, serieCodigo, turno, ...resto } = validated.data
+
+  if ((resto.descontoMensalidade ?? 0) > (resto.valorMensalidade ?? 0) && resto.descontoMensalidade) {
+    return { errors: { descontoMensalidade: ['O desconto não pode ser maior que a mensalidade.'] } }
+  }
 
   try {
     const alunoAntes = await prisma.aluno.findUnique({
@@ -376,6 +399,8 @@ export async function atualizarAluno(
           planoDeSaude: resto.planoDeSaude,
           observacoes: resto.observacoes,
           consentimentoImagem: resto.consentimentoImagem ?? false,
+          valorMensalidade: resto.valorMensalidade ?? null,
+          descontoMensalidade: resto.descontoMensalidade ?? 0,
         },
       })
 

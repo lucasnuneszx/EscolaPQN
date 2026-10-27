@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: 'Emitir Fatura' }
 async function obterAlunosAtivos() {
   return prisma.aluno.findMany({
     where: { status: 'ATIVO' },
-    select: { id: true, nome: true },
+    select: { id: true, nome: true, valorMensalidade: true, descontoMensalidade: true },
     orderBy: { nome: 'asc' },
   })
 }

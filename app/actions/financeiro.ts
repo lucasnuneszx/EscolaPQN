@@ -191,3 +191,93 @@ export async function gerarLinkCobranca(
 
   return { success: true, message: 'Cobrança simulada gerada com sucesso (ambiente sandbox).' }
 }
+
+// Gerar mensalidades do mês em lote
+
+const GerarMesSchema = z.object({
+  referencia: z
+    .string()
+    .regex(/^\d{4}-\d{2}$/, { message: 'Use o formato AAAA-MM, ex.: 2026-08.' }),
+  dataVencimento: z.string().min(1, { message: 'Informe a data de vencimento.' }),
+})
+
+export async function gerarMensalidadesDoMes(
+  prevState: FinanceiroState,
+  formData: FormData
+): Promise<FinanceiroState> {
+  const sessao = await getSession()
+  if (!sessao || !temPermissao(sessao.perfil, 'financeiro:criar')) {
+    return { message: 'Você não tem permissão para emitir cobranças.' }
+  }
+
+  const validated = GerarMesSchema.safeParse({
+    referencia: formData.get('referencia'),
+    dataVencimento: formData.get('dataVencimento'),
+  })
+  if (!validated.success) {
+    return { errors: validated.error.flatten().fieldErrors }
+  }
+
+  const { referencia, dataVencimento } = validated.data
+
+  const alunos = await prisma.aluno.findMany({
+    where: {
+      status: 'ATIVO',
+      valorMensalidade: { gt: 0 },
+      mensalidades: { none: { referencia, status: { not: 'CANCELADO' } } },
+    },
+    select: {
+      id: true,
+      valorMensalidade: true,
+      descontoMensalidade: true,
+      responsaveis: {
+        where: { responsavel: { responsavelFinanceiro: true } },
+        select: { responsavelId: true },
+        take: 1,
+      },
+    },
+  })
+
+  if (alunos.length === 0) {
+    return { message: 'Nenhuma mensalidade a gerar: todos os alunos ativos com valor cadastrado já têm cobrança neste mês.' }
+  }
+
+  const vencimento = new Date(dataVencimento)
+  const registros = alunos.map((a) => {
+    const valorBase = a.valorMensalidade ?? 0
+    const valorDesconto = Math.min(a.descontoMensalidade, valorBase)
+    return {
+      alunoId: a.id,
+      referencia,
+      valorBase,
+      valorDesconto,
+      tipoDesconto: valorDesconto > 0 ? 'Desconto fixo' : null,
+      valorFinal: valorBase - valorDesconto,
+      dataVencimento: vencimento,
+      responsavelId: a.responsaveis[0]?.responsavelId,
+    }
+  })
+
+  try {
+    await prisma.mensalidade.createMany({ data: registros })
+  } catch {
+    return { message: 'Erro ao gerar as mensalidades. Tente novamente.' }
+  }
+
+  const total = registros.reduce((soma, r) => soma + r.valorFinal, 0)
+  await registrarAuditoria({
+    tipo: 'MENSALIDADES_GERADAS_LOTE',
+    descricao: `${registros.length} mensalidades de referência ${referencia} geradas em lote (total R$ ${total.toFixed(2)}).`,
+    entidade: 'Mensalidade',
+    usuarioId: sessao.userId,
+    dadosDepois: { referencia, dataVencimento, quantidade: registros.length },
+  })
+
+  revalidatePath('/admin/financeiro')
+  revalidatePath('/admin/financeiro/gerar-mes')
+
+  return {
+    success: true,
+    message: `${registros.length} mensalidade${registros.length > 1 ? 's geradas' : ' gerada'} para ${referencia}.`,
+  }
+}

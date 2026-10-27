@@ -60,6 +60,9 @@ export default async function FinanceiroPage() {
             <Link href="/admin/financeiro/faturamento" className="btn btn-secondary btn-sm rounded-lg">
               Relatórios
             </Link>
+            <Link href="/admin/financeiro/gerar-mes" className="btn btn-secondary btn-sm rounded-lg">
+              Gerar Mês
+            </Link>
             <Link href="/admin/financeiro/nova-cobranca" className="btn btn-primary btn-sm rounded-lg">
               Emitir Fatura
             </Link>

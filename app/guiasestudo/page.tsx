@@ -82,11 +82,21 @@ const GRUPOS: Grupo[] = [
       {
         id: 'financeiro-responsavel',
         titulo: 'Mensalidades e pagamentos',
-        resumo: 'Como ver boletos, vencimentos e o que já foi pago.',
+        resumo: 'Como ver valores, vencimentos e o que já foi pago.',
         passos: [
           { titulo: 'Abra a aba Financeiro', texto: 'Lista todas as mensalidades com valor, vencimento e situação.' },
-          { titulo: 'Pague a cobrança em aberto', texto: 'Clique na mensalidade para acessar o boleto ou o Pix.' },
-          { titulo: 'Confira a baixa', texto: 'Depois do pagamento, o status muda para pago automaticamente em alguns minutos ou até 1 dia útil.' },
+          { titulo: 'Pague pelo canal da escola', texto: 'Faça o pagamento da forma combinada com a secretaria. Quando houver boleto ou Pix disponível, ele aparece ao lado da mensalidade.' },
+          { titulo: 'Confira a baixa', texto: 'Depois que a secretaria confirmar o pagamento, a mensalidade aparece como paga.' },
+        ],
+      },
+      {
+        id: 'depoimento-responsavel',
+        titulo: 'Deixe seu depoimento',
+        resumo: 'Conte como é a experiência da sua família com a escola.',
+        passos: [
+          { titulo: 'Abra a aba Depoimento', texto: 'No menu lateral do portal, clique em Depoimento.' },
+          { titulo: 'Escreva e envie', texto: 'Confira o nome e a relação com a escola, escreva o texto e clique em Enviar depoimento.' },
+          { titulo: 'Aguarde a aprovação', texto: 'A coordenação revisa e, após aprovado, ele aparece na página Depoimentos do site.' },
         ],
       },
       {
@@ -182,9 +192,10 @@ const GRUPOS: Grupo[] = [
         resumo: 'Gerando e acompanhando os pagamentos.',
         passos: [
           { titulo: 'Abra Mensalidades', texto: 'Lista todas as cobranças com filtros por situação e mês.' },
-          { titulo: 'Gere uma cobrança', texto: 'Clique em Nova cobrança, escolha o aluno, o valor e o mês de referência.' },
-          { titulo: 'Use o faturamento em lote', texto: 'Em Faturamento, gere as mensalidades do mês para todos os alunos de uma vez.' },
-          { titulo: 'Acompanhe pagamentos', texto: 'Pagamentos confirmados mudam de status sozinhos. Clique na cobrança para ver detalhes ou dar baixa manual.' },
+          { titulo: 'Cadastre o valor de cada aluno', texto: 'Na ficha do aluno, seção Mensalidade, informe o valor e, se houver, o desconto fixo.' },
+          { titulo: 'Gere o mês de todos', texto: 'Em Mensalidades, clique em Gerar Mês, confira o mês e o vencimento e gere as cobranças de todos os alunos ativos de uma vez.' },
+          { titulo: 'Cobrança avulsa', texto: 'Para um caso isolado, use Emitir Fatura: ao escolher o aluno, o valor da ficha já vem preenchido.' },
+          { titulo: 'Dê baixa no pagamento', texto: 'Quando a família pagar, abra a cobrança e clique em Marcar como pago.' },
         ],
       },
       {
@@ -195,6 +206,7 @@ const GRUPOS: Grupo[] = [
           { titulo: 'Publique um aviso', texto: 'Em Mural de Avisos, clique em Novo, escreva o comunicado e publique. Ele aparece no portal das famílias.' },
           { titulo: 'Envie documentos', texto: 'Em Documentos, clique em Novo e anexe o arquivo para disponibilizar aos responsáveis.' },
           { titulo: 'Monte o calendário', texto: 'Em Calendário Letivo, cadastre feriados, provas, reuniões e eventos.' },
+          { titulo: 'Aprove depoimentos', texto: 'Em Depoimentos, revise o que os responsáveis enviaram pelo portal e clique em Aprovar para publicar no site.' },
         ],
       },
       {
