@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import SiteHeader from '@/components/public/SiteHeader'
 import SiteFooter from '@/components/public/SiteFooter'
+import { listarDepoimentosAprovados } from '@/lib/depoimentos'
 
 export const metadata: Metadata = {
   title: 'Centro Educacional Pequeno Príncipe — Dias d\'Ávila, Bahia',
@@ -24,7 +25,11 @@ export const metadata: Metadata = {
     'Educação infantil e ensino fundamental em Dias d\'Ávila, BA. Há mais de 35 anos formando crianças a partir de 2 anos com responsabilidade, afeto e excelência pedagógica.',
 }
 
-export default function HomePage() {
+export const revalidate = 300
+
+export default async function HomePage() {
+  const depoimentos = await listarDepoimentosAprovados(3)
+
   return (
     <div className="min-h-screen bg-white dark:bg-slate-950 text-slate-800 dark:text-slate-100 transition-colors duration-200 selection:bg-red-500 selection:text-white" style={{ fontFamily: 'Inter, system-ui, sans-serif' }}>
       {/* Navegação */}
@@ -322,6 +327,7 @@ export default function HomePage() {
       </section>
 
       {/* Depoimentos de Pais (Prova Social) */}
+      {depoimentos.length > 0 && (
       <section className="bg-amber-50/50 dark:bg-amber-950/20 border-y border-amber-100 dark:border-amber-900/40 py-16 sm:py-20">
         <div className="max-w-6xl mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-12">
@@ -334,41 +340,26 @@ export default function HomePage() {
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {[
-              {
-                nome: 'Mariana Santos',
-                aluno: 'Mãe do Pedro (Jardim II)',
-                depoimento: 'O carinho e a atenção de toda a equipe me deixam tranquila para trabalhar. Meu filho ama ir para a escola todos os dias!',
-              },
-              {
-                nome: 'Carlos Eduardo Oliveira',
-                aluno: 'Pai da Sofia (2º Ano)',
-                depoimento: 'A evolução da minha filha na alfabetização foi incrível. O portal dos pais facilita muito o acompanhamento das notas e recados.',
-              },
-              {
-                nome: 'Patrícia Lima',
-                aluno: 'Mãe do Lucas (Maternal)',
-                depoimento: 'Ambiente seguro, limpo e muito acolhedor. Os professores são extremamente dedicados e carinhosos.',
-              },
-            ].map(({ nome, aluno, depoimento }) => (
-              <div key={nome} className="card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
+            {depoimentos.map(({ id, nome, relacao, texto }) => (
+              <div key={id} className="card p-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xs space-y-3">
                 <div className="flex items-center gap-0.5 text-amber-400">
                   {Array.from({ length: 5 }).map((_, i) => (
                     <Star key={i} className="w-3.5 h-3.5" fill="currentColor" strokeWidth={0} />
                   ))}
                 </div>
                 <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-300 italic leading-relaxed">
-                  &ldquo;{depoimento}&rdquo;
+                  &ldquo;{texto}&rdquo;
                 </p>
                 <div className="pt-2 border-t border-slate-100 dark:border-slate-800">
                   <p className="text-xs font-bold text-slate-900 dark:text-white">{nome}</p>
-                  <p className="text-[11px] text-slate-400">{aluno}</p>
+                  <p className="text-[11px] text-slate-400">{relacao}</p>
                 </div>
               </div>
             ))}
           </div>
         </div>
       </section>
+      )}
 
       {/* Banner de Conversão (CTA) */}
       <section className="bg-gradient-to-r from-[#b91c1c] to-[#991b1b] text-white py-14 sm:py-16">

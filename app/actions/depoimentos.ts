@@ -86,6 +86,7 @@ async function alterarStatus(id: string, status: 'APROVADO' | 'REJEITADO' | 'PEN
 
   revalidatePath('/admin/depoimentos')
   revalidatePath('/depoimentos')
+  revalidatePath('/')
   return { success: true }
 }
 
@@ -122,5 +123,6 @@ export async function excluirDepoimento(id: string) {
 
   revalidatePath('/admin/depoimentos')
   revalidatePath('/depoimentos')
+  revalidatePath('/')
   return { success: true }
 }
