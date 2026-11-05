@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { revalidatePath } from 'next/cache'
 import { getSession } from '@/lib/session'
 import { registrarAuditoria } from '@/lib/audit'
+import { salvarFormulario } from '@/lib/formularios'
 
 const LeadRapidoSchema = z.object({
   tipo: z.enum(['MATRICULA', 'VISITA', 'CONTATO', 'WHATSAPP_EXPRESS']),
@@ -40,23 +41,19 @@ export async function salvarLeadRapido(dados: {
 
     const { tipo, nomeResponsavel, emailResponsavel, telefone, nomeAluno, idadeAluno, serieInteresse, turnoPreferido, mensagem } = validated.data
 
-    const lead = await prisma.formularioMatricula.create({
-      data: {
-        tipo,
-        nomeResponsavel,
-        emailResponsavel: emailResponsavel || null,
-        telefone,
-        nomeAluno: nomeAluno || null,
-        idadeAluno: idadeAluno || null,
-        serieInteresse: serieInteresse || null,
-        turnoPreferido: turnoPreferido || null,
-        mensagem: mensagem || null,
-        status: 'NOVO',
-        lido: false,
-      },
+    const { formulario: lead, duplicado } = await salvarFormulario({
+      tipo,
+      nomeResponsavel,
+      emailResponsavel,
+      telefone,
+      nomeAluno,
+      idadeAluno,
+      serieInteresse,
+      turnoPreferido,
+      mensagem,
     })
 
-    await registrarAuditoria({
+    if (!duplicado) await registrarAuditoria({
       tipo: 'LEAD_RECEBIDO',
       descricao: `Novo lead (${tipo}) capturado: ${nomeResponsavel} (${telefone}) - Aluno: ${nomeAluno || 'N/A'}`,
       entidade: 'FormularioMatricula',

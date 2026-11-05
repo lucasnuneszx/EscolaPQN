@@ -18,7 +18,7 @@ export default function FormContato() {
   const [mensagem, setMensagem] = useState('')
 
   const abrirWhatsAppContato = () => {
-    if (nome.trim() || tel.trim() || email.trim()) {
+    if (!state?.success && (nome.trim() || tel.trim() || email.trim())) {
       salvarLeadRapido({
         tipo: 'CONTATO',
         nomeResponsavel: nome.trim() || 'Contato via WhatsApp',

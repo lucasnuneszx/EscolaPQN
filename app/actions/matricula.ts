@@ -2,8 +2,8 @@
 // Server Actions de interesse de matrícula e agendamento de visita
 // (site público — não requer autenticação)
 import { z } from 'zod'
-import { prisma } from '@/lib/prisma'
 import { registrarAuditoria } from '@/lib/audit'
+import { salvarFormulario } from '@/lib/formularios'
 
 const InteresseMatriculaSchema = z.object({
   nomeResponsavel: z.string().trim().min(2, { message: 'Informe o nome completo do responsável.' }),
@@ -53,23 +53,19 @@ export async function submeterInteresseMatricula(
   const { nomeResponsavel, emailResponsavel, telefone, nomeAluno, idadeAluno, serieInteresse, turnoPreferido, mensagem } =
     validated.data
 
-  const formulario = await prisma.formularioMatricula.create({
-    data: {
-      tipo: 'MATRICULA',
-      nomeResponsavel,
-      emailResponsavel,
-      telefone,
-      nomeAluno,
-      idadeAluno,
-      serieInteresse: serieInteresse || undefined,
-      turnoPreferido: turnoPreferido || undefined,
-      mensagem: mensagem || undefined,
-      status: 'NOVO',
-      lido: false,
-    },
+  const { formulario, duplicado } = await salvarFormulario({
+    tipo: 'MATRICULA',
+    nomeResponsavel,
+    emailResponsavel,
+    telefone,
+    nomeAluno,
+    idadeAluno,
+    serieInteresse,
+    turnoPreferido,
+    mensagem,
   })
 
-  await registrarAuditoria({
+  if (!duplicado) await registrarAuditoria({
     tipo: 'MATRICULA_INTERESSE_RECEBIDO',
     descricao: `Interesse de matrícula recebido para ${nomeAluno}, enviado por ${nomeResponsavel} (${emailResponsavel})`,
     entidade: 'FormularioMatricula',
@@ -127,21 +123,17 @@ export async function solicitarAgendamentoVisita(
     .filter(Boolean)
     .join(' ')
 
-  const formulario = await prisma.formularioMatricula.create({
-    data: {
-      tipo: 'VISITA',
-      nomeResponsavel,
-      emailResponsavel,
-      telefone,
-      nomeAluno,
-      turnoPreferido: turnoPreferido || undefined,
-      mensagem: mensagemCompleta,
-      status: 'NOVO',
-      lido: false,
-    },
+  const { formulario, duplicado } = await salvarFormulario({
+    tipo: 'VISITA',
+    nomeResponsavel,
+    emailResponsavel,
+    telefone,
+    nomeAluno,
+    turnoPreferido,
+    mensagem: mensagemCompleta,
   })
 
-  await registrarAuditoria({
+  if (!duplicado) await registrarAuditoria({
     tipo: 'MATRICULA_INTERESSE_RECEBIDO',
     descricao: `Agendamento de visita solicitado por ${nomeResponsavel} (${emailResponsavel}) para conhecer a escola com ${nomeAluno}`,
     entidade: 'FormularioMatricula',

@@ -30,7 +30,7 @@ export default function FormMatricula({ series }: FormMatriculaProps) {
   const [mensagem, setMensagem] = useState('')
 
   const abrirWhatsAppComDados = () => {
-    if (nomeResp.trim() || tel.trim() || nomeAluno.trim()) {
+    if (!state?.success && (nomeResp.trim() || tel.trim() || nomeAluno.trim())) {
       salvarLeadRapido({
         tipo: 'MATRICULA',
         nomeResponsavel: nomeResp.trim() || 'Interessado via WhatsApp',

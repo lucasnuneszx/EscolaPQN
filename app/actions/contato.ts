@@ -1,8 +1,8 @@
 'use server'
 // Server Actions do formulário de contato (site público)
 import { z } from 'zod'
-import { prisma } from '@/lib/prisma'
 import { registrarAuditoria } from '@/lib/audit'
+import { salvarFormulario } from '@/lib/formularios'
 import { revalidatePath } from 'next/cache'
 
 const ContatoSchema = z.object({
@@ -40,19 +40,15 @@ export async function enviarMensagemContato(
 
   const { nome, email, telefone, assunto, mensagem } = validated.data
 
-  const lead = await prisma.formularioMatricula.create({
-    data: {
-      tipo: 'CONTATO',
-      nomeResponsavel: nome,
-      emailResponsavel: email,
-      telefone,
-      mensagem: `[Assunto: ${assunto}] ${mensagem}`,
-      status: 'NOVO',
-      lido: false,
-    },
+  const { formulario: lead, duplicado } = await salvarFormulario({
+    tipo: 'CONTATO',
+    nomeResponsavel: nome,
+    emailResponsavel: email,
+    telefone,
+    mensagem: `[Assunto: ${assunto}] ${mensagem}`,
   })
 
-  await registrarAuditoria({
+  if (!duplicado) await registrarAuditoria({
     tipo: 'CONTATO_RECEBIDO',
     descricao: `Mensagem de contato recebida de ${nome} (${email}) — assunto: ${assunto}`,
     entidade: 'FormularioMatricula',

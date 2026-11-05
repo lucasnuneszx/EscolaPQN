@@ -20,7 +20,7 @@ export default function FormAgendarVisita() {
   const [mensagem, setMensagem] = useState('')
 
   const abrirWhatsAppVisita = () => {
-    if (nomeResp.trim() || tel.trim() || nomeAluno.trim()) {
+    if (!state?.success && (nomeResp.trim() || tel.trim() || nomeAluno.trim())) {
       salvarLeadRapido({
         tipo: 'VISITA',
         nomeResponsavel: nomeResp.trim() || 'Interessado em Visita via WhatsApp',
