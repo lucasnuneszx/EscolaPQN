@@ -19,7 +19,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   {
-    href: '/portal/inicio',
+    href: '/pais',
     label: 'Início',
     perfis: ['RESPONSAVEL', 'ALUNO'],
     icon: (
@@ -30,7 +30,7 @@ const NAV_ITEMS: NavItem[] = [
     ),
   },
   {
-    href: '/portal/turmas',
+    href: '/professor/turmas',
     label: 'Minhas Turmas',
     perfis: ['PROFESSOR'],
     icon: (
@@ -41,7 +41,7 @@ const NAV_ITEMS: NavItem[] = [
     ),
   },
   {
-    href: '/portal/notas',
+    href: '/pais/notas',
     label: 'Notas',
     perfis: ['RESPONSAVEL', 'ALUNO'],
     icon: (
@@ -52,7 +52,7 @@ const NAV_ITEMS: NavItem[] = [
     ),
   },
   {
-    href: '/portal/frequencia',
+    href: '/pais/frequencia',
     label: 'Frequência',
     perfis: ['RESPONSAVEL', 'ALUNO'],
     icon: (
@@ -63,7 +63,7 @@ const NAV_ITEMS: NavItem[] = [
     ),
   },
   {
-    href: '/portal/financeiro',
+    href: '/pais/financeiro',
     label: 'Financeiro',
     perfis: ['RESPONSAVEL', 'ALUNO'],
     icon: (
@@ -74,9 +74,9 @@ const NAV_ITEMS: NavItem[] = [
     ),
   },
   {
-    href: '/portal/comunicados',
+    href: '/professor/comunicados',
     label: 'Comunicados',
-    perfis: ['PROFESSOR', 'RESPONSAVEL', 'ALUNO'],
+    perfis: ['PROFESSOR'],
     icon: (
       <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
@@ -85,7 +85,18 @@ const NAV_ITEMS: NavItem[] = [
     ),
   },
   {
-    href: '/portal/documentos',
+    href: '/pais/comunicados',
+    label: 'Comunicados',
+    perfis: ['RESPONSAVEL', 'ALUNO'],
+    icon: (
+      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8}
+          d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+      </svg>
+    ),
+  },
+  {
+    href: '/pais/documentos',
     label: 'Documentos',
     perfis: ['RESPONSAVEL', 'ALUNO'],
     icon: (
@@ -96,7 +107,7 @@ const NAV_ITEMS: NavItem[] = [
     ),
   },
   {
-    href: '/portal/depoimento',
+    href: '/pais/depoimento',
     label: 'Depoimento',
     perfis: ['RESPONSAVEL'],
     icon: (
@@ -111,9 +122,9 @@ const NAV_ITEMS: NavItem[] = [
 const PERFIL_SUBTITULO: Record<PerfilUsuario, string> = {
   ADMIN: 'Portal',
   SECRETARIA: 'Portal',
-  PROFESSOR: 'Portal do Professor',
-  RESPONSAVEL: 'Portal da Família',
-  ALUNO: 'Portal do Aluno',
+  PROFESSOR: 'Área do Professor',
+  RESPONSAVEL: 'Área dos Pais',
+  ALUNO: 'Área do Aluno',
 }
 
 export default function PortalSidebar({ perfil }: PortalSidebarProps) {
@@ -144,7 +155,7 @@ export default function PortalSidebar({ perfil }: PortalSidebarProps) {
 
       <nav className="flex-1 overflow-y-auto p-4 space-y-1" aria-label="Navegação do portal">
         {itens.map((item) => {
-          const ativo = pathname === item.href || pathname.startsWith(item.href + '/')
+          const ativo = pathname === item.href || (item.href !== '/pais' && pathname.startsWith(item.href + '/'))
           return (
             <Link
               key={item.href}

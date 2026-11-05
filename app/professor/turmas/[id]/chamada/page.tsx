@@ -30,7 +30,7 @@ export default async function ChamadaPage({
   const sessao = await getSession()
 
   if (!sessao) redirect('/login')
-  if (!temPermissao(sessao.perfil, 'chamada:fazer')) redirect('/portal/inicio')
+  if (!temPermissao(sessao.perfil, 'chamada:fazer')) redirect('/pais')
 
   const vinculo = await prisma.turmaDisciplina.findUnique({
     where: { id },
@@ -46,7 +46,7 @@ export default async function ChamadaPage({
           titulo="Turma não encontrada"
           mensagem="Esta turma não existe ou não está vinculada ao seu acesso."
         />
-        <Link href="/portal/turmas" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:underline">
+        <Link href="/professor/turmas" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:underline">
           <ArrowLeft className="w-3.5 h-3.5" strokeWidth={2.5} />
           Voltar para minhas turmas
         </Link>
@@ -82,7 +82,7 @@ export default async function ChamadaPage({
   return (
     <div className="space-y-6 animate-fade-in">
       <div className="pb-5 border-b border-slate-200/60">
-        <Link href="/portal/turmas" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:underline">
+        <Link href="/professor/turmas" className="inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:underline">
           <ArrowLeft className="w-3.5 h-3.5" strokeWidth={2.5} />
           Minhas turmas
         </Link>

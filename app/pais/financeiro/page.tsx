@@ -12,7 +12,7 @@ export default async function FinanceiroPage() {
   if (!sessao) redirect('/login')
 
   if (sessao.perfil === 'PROFESSOR') {
-    redirect('/portal/turmas')
+    redirect('/professor/turmas')
   }
 
   const cabecalho = (

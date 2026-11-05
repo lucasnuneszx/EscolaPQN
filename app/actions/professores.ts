@@ -23,15 +23,7 @@ function mensagemErroPrisma(error: unknown): string {
   return 'Ocorreu um erro inesperado. Tente novamente.'
 }
 
-/**
- * Gera uma senha temporária simples para o primeiro acesso do professor ao portal.
- * Mesmo critério usado para responsáveis: prefixo fixo "Trocar@" + 4 dígitos
- * aleatórios (ex.: Trocar@4821). O professor deve trocá-la no primeiro acesso.
- */
-function gerarSenhaTemporaria(): string {
-  const digitos = Math.floor(1000 + Math.random() * 9000)
-  return `Trocar@${digitos}`
-}
+const SenhaSchema = z.string().min(6, { message: 'A senha precisa ter pelo menos 6 caracteres.' })
 
 const ProfessorBaseSchema = z.object({
   nome: z.string().trim().min(2, { message: 'Informe o nome completo do professor.' }),
@@ -43,8 +35,13 @@ const ProfessorBaseSchema = z.object({
   observacoes: z.string().trim().optional(),
 })
 
+const CriarProfessorSchema = ProfessorBaseSchema.extend({
+  senha: SenhaSchema,
+})
+
 const AtualizarProfessorSchema = ProfessorBaseSchema.extend({
   id: z.string().trim().min(1),
+  novaSenha: SenhaSchema.optional(),
 })
 
 export type ProfessorState = {
@@ -66,7 +63,8 @@ export async function criarProfessor(
     return { message: 'Você não tem permissão para cadastrar professores.' }
   }
 
-  const validated = ProfessorBaseSchema.safeParse({
+  const validated = CriarProfessorSchema.safeParse({
+    senha: formData.get('senha'),
     nome: formData.get('nome'),
     email: formData.get('email'),
     telefone: textoOpcional(formData.get('telefone')),
@@ -81,11 +79,10 @@ export async function criarProfessor(
   }
 
   const data = validated.data
-  const senhaTemporaria = gerarSenhaTemporaria()
 
   try {
     const professor = await prisma.$transaction(async (tx) => {
-      const senhaHash = await bcrypt.hash(senhaTemporaria, 12)
+      const senhaHash = await bcrypt.hash(data.senha, 12)
       const usuario = await tx.usuario.create({
         data: {
           nome: data.nome,
@@ -110,7 +107,7 @@ export async function criarProfessor(
 
     await registrarAuditoria({
       tipo: 'PROFESSOR_CRIADO',
-      descricao: `Professor "${professor.usuario.nome}" cadastrado com acesso ao portal (senha temporária gerada).`,
+      descricao: `Professor "${professor.usuario.nome}" cadastrado com acesso à área do professor.`,
       entidade: 'Professor',
       entidadeId: professor.id,
       usuarioId: sessao.userId,
@@ -138,6 +135,7 @@ export async function atualizarProfessor(
 
   const validated = AtualizarProfessorSchema.safeParse({
     id: formData.get('id'),
+    novaSenha: textoOpcional(formData.get('novaSenha')),
     nome: formData.get('nome'),
     email: formData.get('email'),
     telefone: textoOpcional(formData.get('telefone')),
@@ -151,7 +149,7 @@ export async function atualizarProfessor(
     return { errors: validated.error.flatten().fieldErrors, message: 'Verifique os campos destacados.' }
   }
 
-  const { id, ...resto } = validated.data
+  const { id, novaSenha, ...resto } = validated.data
 
   try {
     const antes = await prisma.professor.findUnique({ where: { id }, include: { usuario: true } })
@@ -166,6 +164,7 @@ export async function atualizarProfessor(
           nome: resto.nome,
           email: resto.email,
           telefone: resto.telefone,
+          ...(novaSenha ? { senhaHash: await bcrypt.hash(novaSenha, 12) } : {}),
         },
       })
 
@@ -183,7 +182,7 @@ export async function atualizarProfessor(
 
     await registrarAuditoria({
       tipo: 'PROFESSOR_ATUALIZADO',
-      descricao: `Professor "${depois.usuario.nome}" atualizado.`,
+      descricao: `Professor "${depois.usuario.nome}" atualizado${novaSenha ? ' (senha de acesso redefinida)' : ''}.`,
       entidade: 'Professor',
       entidadeId: id,
       usuarioId: sessao.userId,

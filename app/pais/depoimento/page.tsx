@@ -16,7 +16,7 @@ const ROTULO_STATUS: Record<string, { texto: string; classe: string }> = {
 export default async function DepoimentoPage() {
   const sessao = await getSession()
   if (!sessao) redirect('/login')
-  if (sessao.perfil !== 'RESPONSAVEL') redirect('/portal/inicio')
+  if (sessao.perfil !== 'RESPONSAVEL') redirect('/pais')
 
   const [responsavel, enviados] = await Promise.all([
     prisma.responsavel.findUnique({

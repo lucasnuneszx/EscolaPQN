@@ -103,11 +103,11 @@ export function getRedirectUrlPorPerfil(perfil: PerfilUsuario): string {
     case 'SECRETARIA':
       return '/admin/dashboard'
     case 'PROFESSOR':
-      return '/portal/turmas'
+      return '/professor/turmas'
     case 'RESPONSAVEL':
-      return '/portal/inicio'
+      return '/pais'
     case 'ALUNO':
-      return '/portal/inicio'
+      return '/pais'
     default:
       return '/login'
   }

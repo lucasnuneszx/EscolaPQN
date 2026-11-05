@@ -1,7 +1,8 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import Link from 'next/link'
+import CampoSenhaAcesso from '@/components/admin/CampoSenhaAcesso'
 import { criarResponsavel, atualizarResponsavel, type ResponsavelState } from '@/app/actions/responsaveis'
 
 interface ResponsavelInicial {
@@ -29,6 +30,8 @@ export default function FormResponsavel({ responsavelInicial }: Props) {
   const modoEdicao = !!responsavelInicial
   const action = modoEdicao ? atualizarResponsavel : criarResponsavel
   const [state, formAction, pending] = useActionState<ResponsavelState, FormData>(action, undefined)
+  const temLogin = !!responsavelInicial?.usuarioId
+  const [criarAcesso, setCriarAcesso] = useState(false)
 
   return (
     <form action={formAction} className="space-y-6">
@@ -192,25 +195,52 @@ export default function FormResponsavel({ responsavelInicial }: Props) {
           </label>
         </div>
 
-        {!modoEdicao && (
-          <div className="border-t border-slate-100 pt-4">
-            <label className="flex items-center gap-2 text-xs font-medium text-slate-700">
-              <input
-                type="checkbox"
-                name="criarAcessoPortal"
-                disabled={pending}
-                className="rounded border-slate-300 text-[#b91c1c] focus:ring-[#b91c1c]"
-              />
-              Criar acesso ao Portal do Responsável (requer e-mail — uma senha temporária será gerada)
-            </label>
-          </div>
-        )}
+        <div className="border-t border-slate-100 pt-4 space-y-3">
+          <h3 className="text-xs font-bold text-slate-900">Login da área dos pais</h3>
 
-        {modoEdicao && !responsavelInicial.usuarioId && (
-          <p className="text-xs text-slate-400 italic">
-            Este responsável ainda não possui acesso ao portal.
-          </p>
-        )}
+          {temLogin ? (
+            <>
+              <p className="text-xs text-slate-500">
+                Este responsável já tem login. Ele entra em /login com o e-mail cadastrado.
+              </p>
+              <div className="md:w-1/2">
+                <CampoSenhaAcesso
+                  name="senha"
+                  label="Nova senha"
+                  ajuda="Deixe em branco para manter a senha atual."
+                  erro={state?.errors?.senha?.[0]}
+                  disabled={pending}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <label className="flex items-center gap-2 text-xs font-medium text-slate-700">
+                <input
+                  type="checkbox"
+                  name="criarAcessoPortal"
+                  checked={criarAcesso}
+                  onChange={(e) => setCriarAcesso(e.target.checked)}
+                  disabled={pending}
+                  className="rounded border-slate-300 text-[#b91c1c] focus:ring-[#b91c1c]"
+                />
+                Criar login para a área dos pais (usa o e-mail informado acima)
+              </label>
+              {criarAcesso && (
+                <div className="md:w-1/2">
+                  <CampoSenhaAcesso
+                    name="senha"
+                    label="Senha de acesso"
+                    obrigatorio
+                    ajuda="Anote ou copie antes de salvar para repassar ao responsável."
+                    erro={state?.errors?.senha?.[0]}
+                    disabled={pending}
+                  />
+                </div>
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center justify-end gap-3">

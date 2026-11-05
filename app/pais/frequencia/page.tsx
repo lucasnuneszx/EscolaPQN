@@ -12,7 +12,7 @@ export default async function FrequenciaPage() {
   if (!sessao) redirect('/login')
 
   if (sessao.perfil === 'PROFESSOR') {
-    redirect('/portal/turmas')
+    redirect('/professor/turmas')
   }
 
   const cabecalho = (

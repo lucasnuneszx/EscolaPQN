@@ -22,16 +22,7 @@ function boolCheckbox(v: FormDataEntryValue | null): boolean {
   return v === 'on' || v === 'true' || v === '1'
 }
 
-/**
- * Gera uma senha temporária simples para o primeiro acesso do responsável ao portal.
- * Critério: prefixo fixo "Trocar@" + 4 dígitos aleatórios (ex.: Trocar@4821).
- * O responsável deve trocá-la no primeiro acesso (fluxo de troca de senha já
- * existente em /esqueci-senha, fora do escopo desta tarefa).
- */
-function gerarSenhaTemporaria(): string {
-  const digitos = Math.floor(1000 + Math.random() * 9000)
-  return `Trocar@${digitos}`
-}
+const SENHA_MINIMA = 6
 
 function mensagemErroPrisma(error: unknown): string {
   if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
@@ -56,6 +47,7 @@ const ResponsavelBaseSchema = z.object({
   consentimentoImagem: z.boolean().optional(),
   consentimentoLGPD: z.boolean().optional(),
   criarAcessoPortal: z.boolean().optional(),
+  senha: z.string().optional(),
 })
 
 const AtualizarResponsavelSchema = ResponsavelBaseSchema.extend({
@@ -98,6 +90,7 @@ export async function criarResponsavel(
     consentimentoImagem: boolCheckbox(formData.get('consentimentoImagem')),
     consentimentoLGPD: boolCheckbox(formData.get('consentimentoLGPD')),
     criarAcessoPortal: boolCheckbox(formData.get('criarAcessoPortal')),
+    senha: textoOpcional(formData.get('senha')),
   })
 
   if (!validated.success) {
@@ -107,18 +100,18 @@ export async function criarResponsavel(
   const data = validated.data
 
   if (data.criarAcessoPortal && !data.email) {
-    return { message: 'Para criar acesso ao portal é necessário informar um e-mail válido.' }
+    return { message: 'Para criar o login da área dos pais é necessário informar um e-mail válido.' }
   }
-
-  let senhaGerada: string | undefined
+  if (data.criarAcessoPortal && (!data.senha || data.senha.length < SENHA_MINIMA)) {
+    return { errors: { senha: [`A senha precisa ter pelo menos ${SENHA_MINIMA} caracteres.`] }, message: 'Verifique os campos destacados.' }
+  }
 
   try {
     const novoResponsavel = await prisma.$transaction(async (tx) => {
       let usuarioId: string | undefined
 
-      if (data.criarAcessoPortal && data.email) {
-        senhaGerada = gerarSenhaTemporaria()
-        const senhaHash = await bcrypt.hash(senhaGerada, 12)
+      if (data.criarAcessoPortal && data.email && data.senha) {
+        const senhaHash = await bcrypt.hash(data.senha, 12)
         const usuario = await tx.usuario.create({
           data: {
             nome: data.nome,
@@ -153,7 +146,7 @@ export async function criarResponsavel(
 
     await registrarAuditoria({
       tipo: 'RESPONSAVEL_CRIADO',
-      descricao: `Responsável "${novoResponsavel.nome}" cadastrado${data.criarAcessoPortal ? ' com acesso ao portal' : ''}.`,
+      descricao: `Responsável "${novoResponsavel.nome}" cadastrado${data.criarAcessoPortal ? ' com acesso à área dos pais' : ''}.`,
       entidade: 'Responsavel',
       entidadeId: novoResponsavel.id,
       usuarioId: sessao.userId,
@@ -193,13 +186,19 @@ export async function atualizarResponsavel(
     responsavelPedagogico: boolCheckbox(formData.get('responsavelPedagogico')),
     consentimentoImagem: boolCheckbox(formData.get('consentimentoImagem')),
     consentimentoLGPD: boolCheckbox(formData.get('consentimentoLGPD')),
+    criarAcessoPortal: boolCheckbox(formData.get('criarAcessoPortal')),
+    senha: textoOpcional(formData.get('senha')),
   })
 
   if (!validated.success) {
     return { errors: validated.error.flatten().fieldErrors, message: 'Verifique os campos destacados.' }
   }
 
-  const { id, ...resto } = validated.data
+  const { id, senha, criarAcessoPortal, ...resto } = validated.data
+
+  if (senha && senha.length < SENHA_MINIMA) {
+    return { errors: { senha: [`A senha precisa ter pelo menos ${SENHA_MINIMA} caracteres.`] }, message: 'Verifique os campos destacados.' }
+  }
 
   try {
     const antes = await prisma.responsavel.findUnique({ where: { id } })
@@ -207,28 +206,65 @@ export async function atualizarResponsavel(
       return { message: 'Responsável não encontrado.' }
     }
 
-    const depois = await prisma.responsavel.update({
-      where: { id },
-      data: {
-        nome: resto.nome,
-        cpf: resto.cpf,
-        rg: resto.rg,
-        email: resto.email,
-        telefone: resto.telefone,
-        whatsapp: resto.whatsapp,
-        parentesco: resto.parentesco,
-        endereco: resto.endereco,
-        responsavelFinanceiro: resto.responsavelFinanceiro ?? false,
-        responsavelPedagogico: resto.responsavelPedagogico ?? false,
-        consentimentoImagem: resto.consentimentoImagem ?? false,
-        consentimentoLGPD: resto.consentimentoLGPD ?? false,
-        consentimentoDataHora: resto.consentimentoLGPD && !antes.consentimentoLGPD ? new Date() : undefined,
-      },
+    if (!antes.usuarioId && criarAcessoPortal) {
+      if (!resto.email) {
+        return { message: 'Para criar o login da área dos pais é necessário informar um e-mail válido.' }
+      }
+      if (!senha) {
+        return { errors: { senha: ['Defina a senha de acesso.'] }, message: 'Verifique os campos destacados.' }
+      }
+    }
+
+    const depois = await prisma.$transaction(async (tx) => {
+      let usuarioId = antes.usuarioId
+
+      if (usuarioId) {
+        await tx.usuario.update({
+          where: { id: usuarioId },
+          data: {
+            nome: resto.nome,
+            telefone: resto.telefone,
+            ...(resto.email ? { email: resto.email } : {}),
+            ...(senha ? { senhaHash: await bcrypt.hash(senha, 12) } : {}),
+          },
+        })
+      } else if (criarAcessoPortal && resto.email && senha) {
+        const usuario = await tx.usuario.create({
+          data: {
+            nome: resto.nome,
+            email: resto.email,
+            senhaHash: await bcrypt.hash(senha, 12),
+            perfil: 'RESPONSAVEL',
+            telefone: resto.telefone,
+          },
+        })
+        usuarioId = usuario.id
+      }
+
+      return tx.responsavel.update({
+        where: { id },
+        data: {
+          usuarioId,
+          nome: resto.nome,
+          cpf: resto.cpf,
+          rg: resto.rg,
+          email: resto.email,
+          telefone: resto.telefone,
+          whatsapp: resto.whatsapp,
+          parentesco: resto.parentesco,
+          endereco: resto.endereco,
+          responsavelFinanceiro: resto.responsavelFinanceiro ?? false,
+          responsavelPedagogico: resto.responsavelPedagogico ?? false,
+          consentimentoImagem: resto.consentimentoImagem ?? false,
+          consentimentoLGPD: resto.consentimentoLGPD ?? false,
+          consentimentoDataHora: resto.consentimentoLGPD && !antes.consentimentoLGPD ? new Date() : undefined,
+        },
+      })
     })
 
     await registrarAuditoria({
       tipo: 'RESPONSAVEL_ATUALIZADO',
-      descricao: `Responsável "${depois.nome}" atualizado.`,
+      descricao: `Responsável "${depois.nome}" atualizado${!antes.usuarioId && depois.usuarioId ? ' (login da área dos pais criado)' : senha ? ' (senha de acesso redefinida)' : ''}.`,
       entidade: 'Responsavel',
       entidadeId: id,
       usuarioId: sessao.userId,

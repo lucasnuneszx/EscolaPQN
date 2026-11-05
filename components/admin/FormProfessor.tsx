@@ -2,6 +2,7 @@
 
 import { useActionState } from 'react'
 import Link from 'next/link'
+import CampoSenhaAcesso from '@/components/admin/CampoSenhaAcesso'
 import { criarProfessor, atualizarProfessor, type ProfessorState } from '@/app/actions/professores'
 
 interface ProfessorInicial {
@@ -131,12 +132,32 @@ export default function FormProfessor({ professorInicial }: Props) {
           </div>
         </div>
 
-        {!modoEdicao && (
-          <p className="text-xs text-slate-500 bg-slate-50 border border-slate-100 rounded-lg p-3">
-            Uma senha temporária de acesso ao portal será gerada automaticamente para este professor.
-            Comunique-a com segurança e oriente a troca no primeiro acesso.
+        <div className="border-t border-slate-100 pt-4 space-y-1">
+          <h3 className="text-xs font-bold text-slate-900">Login da área do professor</h3>
+          <p className="text-xs text-slate-500">
+            O professor entra em /login com o e-mail acima e esta senha.
           </p>
-        )}
+          <div className="md:w-1/2 pt-2">
+            {modoEdicao ? (
+              <CampoSenhaAcesso
+                name="novaSenha"
+                label="Nova senha"
+                ajuda="Deixe em branco para manter a senha atual."
+                erro={state?.errors?.novaSenha?.[0]}
+                disabled={pending}
+              />
+            ) : (
+              <CampoSenhaAcesso
+                name="senha"
+                label="Senha de acesso"
+                obrigatorio
+                ajuda="Anote ou copie antes de salvar para repassar ao professor."
+                erro={state?.errors?.senha?.[0]}
+                disabled={pending}
+              />
+            )}
+          </div>
+        </div>
       </div>
 
       <div className="flex items-center justify-end gap-3">

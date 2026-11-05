@@ -169,10 +169,10 @@ const GRUPOS: Grupo[] = [
         titulo: 'Cadastrando alunos, responsáveis e professores',
         resumo: 'Ordem recomendada para montar os cadastros.',
         passos: [
-          { titulo: 'Cadastre o responsável', texto: 'Em Responsáveis, clique em Novo. O e-mail informado será o login do portal.' },
+          { titulo: 'Cadastre o responsável', texto: 'Em Responsáveis, clique em Novo, marque "Criar login para a área dos pais" e defina a senha. O e-mail informado é o login.' },
           { titulo: 'Cadastre o aluno', texto: 'Em Alunos, clique em Novo e vincule o aluno ao responsável e à turma.' },
-          { titulo: 'Cadastre os professores', texto: 'Em Professores, clique em Novo. Eles recebem acesso à Área do Professor.' },
-          { titulo: 'Edite quando precisar', texto: 'Em cada lista, use o botão de editar para corrigir dados.' },
+          { titulo: 'Cadastre os professores', texto: 'Em Professores, clique em Novo e defina a senha de acesso. O professor entra com o e-mail e essa senha na Área do Professor.' },
+          { titulo: 'Edite quando precisar', texto: 'Em cada lista, use o botão de editar para corrigir dados ou definir uma nova senha de acesso.' },
         ],
       },
       {

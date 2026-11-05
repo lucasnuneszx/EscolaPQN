@@ -27,6 +27,31 @@ const ROTAS_PUBLICAS = [
 // Prefixos de rotas que exigem perfil admin/secretaria
 const ROTAS_ADMIN = ['/admin']
 
+const PERFIS_POR_AREA: Record<string, string[]> = {
+  '/professor': ['PROFESSOR'],
+  '/pais': ['RESPONSAVEL', 'ALUNO'],
+}
+
+function areaDoPerfil(perfil: string): string {
+  if (perfil === 'ADMIN' || perfil === 'SECRETARIA') return '/admin/dashboard'
+  if (perfil === 'PROFESSOR') return '/professor/turmas'
+  if (perfil === 'RESPONSAVEL' || perfil === 'ALUNO') return '/pais'
+  return '/login'
+}
+
+function rotaLegadaDoPortal(pathname: string, perfil: string): string {
+  const resto = pathname.replace(/^\/portal\/?/, '')
+  if (perfil === 'PROFESSOR') {
+    if (resto.startsWith('turmas') || resto.startsWith('comunicados')) return `/professor/${resto}`
+    return '/professor/turmas'
+  }
+  if (perfil === 'RESPONSAVEL' || perfil === 'ALUNO') {
+    if (!resto || resto === 'inicio' || resto.startsWith('turmas')) return '/pais'
+    return `/pais/${resto}`
+  }
+  return areaDoPerfil(perfil)
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
@@ -48,15 +73,19 @@ export async function proxy(request: NextRequest) {
   // Admin/secretaria
   if (ROTAS_ADMIN.some((r) => pathname.startsWith(r))) {
     if (!['ADMIN', 'SECRETARIA'].includes(sessao.perfil)) {
-      return NextResponse.redirect(new URL('/portal/inicio', request.url))
+      return NextResponse.redirect(new URL(areaDoPerfil(sessao.perfil), request.url))
     }
   }
 
-  // Portal
-  if (pathname.startsWith('/portal')) {
-    const perfisPortal = ['ADMIN', 'SECRETARIA', 'PROFESSOR', 'RESPONSAVEL', 'ALUNO']
-    if (!perfisPortal.includes(sessao.perfil)) {
-      return NextResponse.redirect(new URL('/login', request.url))
+  // Links antigos do portal: leva para a área do perfil logado
+  if (pathname === '/portal' || pathname.startsWith('/portal/')) {
+    return NextResponse.redirect(new URL(rotaLegadaDoPortal(pathname, sessao.perfil), request.url))
+  }
+
+  // Área do professor e área dos pais
+  for (const [prefixo, perfis] of Object.entries(PERFIS_POR_AREA)) {
+    if ((pathname === prefixo || pathname.startsWith(prefixo + '/')) && !perfis.includes(sessao.perfil)) {
+      return NextResponse.redirect(new URL(areaDoPerfil(sessao.perfil), request.url))
     }
   }
 

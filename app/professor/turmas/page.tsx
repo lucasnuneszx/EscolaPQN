@@ -13,7 +13,7 @@ export default async function TurmasPage() {
 
   if (sessao.perfil !== 'PROFESSOR') {
     // RESPONSAVEL/ALUNO não possuem turmas próprias — leva ao início
-    redirect('/portal/inicio')
+    redirect('/pais')
   }
 
   const professor = await prisma.professor.findUnique({
@@ -61,10 +61,10 @@ export default async function TurmasPage() {
                 <p className="text-xs text-slate-500 mt-1">{v.disciplina.nome}</p>
               </div>
               <div className="flex gap-2 mt-auto">
-                <Link href={`/portal/turmas/${v.id}/chamada`} className="btn btn-secondary btn-sm flex-1 justify-center">
+                <Link href={`/professor/turmas/${v.id}/chamada`} className="btn btn-secondary btn-sm flex-1 justify-center">
                   Chamada
                 </Link>
-                <Link href={`/portal/turmas/${v.id}/notas`} className="btn btn-primary btn-sm flex-1 justify-center">
+                <Link href={`/professor/turmas/${v.id}/notas`} className="btn btn-primary btn-sm flex-1 justify-center">
                   Notas
                 </Link>
               </div>

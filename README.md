@@ -22,7 +22,7 @@ npm run db:seed              # opcional: dados fictícios de desenvolvimento
 npm run dev
 ```
 
-Acesse http://localhost:3000. O painel fica em `/admin` e o portal em `/portal`.
+Acesse http://localhost:3000. O painel fica em `/admin`, a área do professor em `/professor` e a área dos pais em `/pais`.
 
 Outros scripts: `npm run build`, `npm run lint`, `npm run db:studio`.
 
@@ -39,7 +39,7 @@ Em `.env.local` (não versionado):
 ## Estrutura
 
 ```
-app/            rotas (site público, /admin, /portal, /api) e Server Actions em app/actions
+app/            rotas (site público, /admin, /professor, /pais, /api) e Server Actions em app/actions
 components/     componentes por área: admin, portal, public, auth, theme
 lib/            prisma, sessão, controle de acesso (rbac), auditoria
 prisma/         schema.prisma e seed

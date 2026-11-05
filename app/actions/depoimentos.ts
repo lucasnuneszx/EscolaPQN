@@ -55,7 +55,7 @@ export async function enviarDepoimento(
     return { message: 'Não foi possível enviar agora. Tente novamente.' }
   }
 
-  revalidatePath('/portal/depoimento')
+  revalidatePath('/pais/depoimento')
   revalidatePath('/admin/depoimentos')
   return { success: true, message: 'Obrigado! Seu depoimento foi enviado e aparecerá no site após a aprovação da escola.' }
 }

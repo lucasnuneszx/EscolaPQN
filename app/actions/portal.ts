@@ -142,8 +142,8 @@ export async function fazerChamada(
     dadosDepois: { turmaId: vinculo.turmaId, data: dataStr, registros: registrosValidos },
   })
 
-  revalidatePath(`/portal/turmas/${turmaDisciplinaId}/chamada`)
-  revalidatePath('/portal/frequencia')
+  revalidatePath(`/professor/turmas/${turmaDisciplinaId}/chamada`)
+  revalidatePath('/pais/frequencia')
 
   return { success: true, message: 'Chamada registrada com sucesso.' }
 }
@@ -242,8 +242,8 @@ export async function lancarNotas(
     dadosDepois: { periodoId, registros: registrosValidos },
   })
 
-  revalidatePath(`/portal/turmas/${turmaDisciplinaId}/notas`)
-  revalidatePath('/portal/notas')
+  revalidatePath(`/professor/turmas/${turmaDisciplinaId}/notas`)
+  revalidatePath('/pais/notas')
 
   return { success: true, message: 'Notas lançadas com sucesso.' }
 }
