@@ -19,6 +19,21 @@ export default async function AdminLeadsPage() {
     orderBy: { criadoEm: 'desc' },
   })
 
+  // IP de origem registrado na auditoria quando o formulário chegou
+  const registros = await prisma.auditLog.findMany({
+    where: {
+      entidade: 'FormularioMatricula',
+      entidadeId: { in: leads.map((l) => l.id) },
+      ip: { not: null },
+    },
+    select: { entidadeId: true, ip: true },
+    orderBy: { criadoEm: 'asc' },
+  })
+  const ipPorLead = new Map<string, string>()
+  for (const r of registros) {
+    if (r.entidadeId && r.ip && !ipPorLead.has(r.entidadeId)) ipPorLead.set(r.entidadeId, r.ip)
+  }
+
   const serializedLeads = leads.map((l) => ({
     id: l.id,
     tipo: l.tipo,
@@ -34,6 +49,7 @@ export default async function AdminLeadsPage() {
     lido: l.lido,
     observacoesInternas: l.observacoesInternas,
     criadoEm: l.criadoEm.toISOString(),
+    ipOrigem: ipPorLead.get(l.id) ?? null,
   }))
 
   return (

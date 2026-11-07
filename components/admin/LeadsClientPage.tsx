@@ -31,6 +31,7 @@ interface LeadItem {
   lido: boolean
   observacoesInternas: string | null
   criadoEm: string
+  ipOrigem: string | null
 }
 
 interface LeadsClientPageProps {
@@ -391,6 +392,9 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
                         <strong>E-mail:</strong> {lead.emailResponsavel}
                       </p>
                     )}
+                    <p className="text-slate-600 dark:text-slate-400">
+                      <strong>IP de origem:</strong> {lead.ipOrigem ?? 'Não registrado'}
+                    </p>
                   </div>
 
                   {/* Dados do Aluno */}

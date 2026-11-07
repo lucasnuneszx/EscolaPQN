@@ -2,7 +2,7 @@
 // Server Actions de interesse de matrícula e agendamento de visita
 // (site público — não requer autenticação)
 import { z } from 'zod'
-import { registrarAuditoria } from '@/lib/audit'
+import { registrarAuditoria, registrarTentativaRobo } from '@/lib/audit'
 import { salvarFormulario } from '@/lib/formularios'
 import { limiteExcedido, MENSAGEM_LIMITE } from '@/lib/rate-limit'
 import {
@@ -55,8 +55,11 @@ export async function submeterInteresseMatricula(
   prevState: MatriculaState,
   formData: FormData
 ): Promise<MatriculaState> {
-  if (enviadoPorRobo(formData)) return SUCESSO_MATRICULA
   if (await limiteExcedido('formulario')) return { message: MENSAGEM_LIMITE }
+  if (enviadoPorRobo(formData)) {
+    await registrarTentativaRobo('matrícula', formData)
+    return SUCESSO_MATRICULA
+  }
 
   const validated = InteresseMatriculaSchema.safeParse({
     nomeResponsavel: formData.get('nomeResponsavel'),
@@ -117,8 +120,11 @@ export async function solicitarAgendamentoVisita(
   prevState: MatriculaState,
   formData: FormData
 ): Promise<MatriculaState> {
-  if (enviadoPorRobo(formData)) return SUCESSO_VISITA
   if (await limiteExcedido('formulario')) return { message: MENSAGEM_LIMITE }
+  if (enviadoPorRobo(formData)) {
+    await registrarTentativaRobo('visita', formData)
+    return SUCESSO_VISITA
+  }
 
   const validated = AgendamentoVisitaSchema.safeParse({
     nomeResponsavel: formData.get('nomeResponsavel'),

@@ -1,7 +1,7 @@
 'use server'
 // Server Actions do formulário de contato (site público)
 import { z } from 'zod'
-import { registrarAuditoria } from '@/lib/audit'
+import { registrarAuditoria, registrarTentativaRobo } from '@/lib/audit'
 import { salvarFormulario } from '@/lib/formularios'
 import { revalidatePath } from 'next/cache'
 import { limiteExcedido, MENSAGEM_LIMITE } from '@/lib/rate-limit'
@@ -33,8 +33,11 @@ export async function enviarMensagemContato(
   prevState: ContatoState,
   formData: FormData
 ): Promise<ContatoState> {
-  if (enviadoPorRobo(formData)) return SUCESSO_CONTATO
   if (await limiteExcedido('formulario')) return { message: MENSAGEM_LIMITE }
+  if (enviadoPorRobo(formData)) {
+    await registrarTentativaRobo('contato', formData)
+    return SUCESSO_CONTATO
+  }
 
   const validated = ContatoSchema.safeParse({
     nome: formData.get('nome'),

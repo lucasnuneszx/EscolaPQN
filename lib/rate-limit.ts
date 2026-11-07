@@ -2,6 +2,7 @@
 import 'server-only'
 import { headers } from 'next/headers'
 import { prisma } from '@/lib/prisma'
+import { registrarAuditoria } from '@/lib/audit'
 
 const MINUTO = 60 * 1000
 
@@ -73,7 +74,17 @@ export async function limiteExcedido(acao: AcaoLimitada): Promise<boolean> {
       await prisma.$executeRaw`DELETE FROM "RateLimite" WHERE "expiraEm" < ${agora}`
     }
 
-    return Number(registro?.contador ?? 0) > limite
+    const contador = Number(registro?.contador ?? 0)
+    if (contador === limite + 1) {
+      await registrarAuditoria({
+        tipo: 'LIMITE_EXCEDIDO',
+        descricao: `Limite de tentativas excedido em "${acao}" — novas requisições deste IP ficam bloqueadas por até ${janelaMs / MINUTO} minutos`,
+        entidade: 'RateLimite',
+        entidadeId: chave,
+      })
+    }
+
+    return contador > limite
   } catch (erro) {
     console.error('Falha ao verificar limite de requisições:', erro)
     return false

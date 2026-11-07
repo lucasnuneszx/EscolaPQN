@@ -59,7 +59,7 @@ export default async function AuditoriaPage() {
                 {logs.map((log) => (
                   <tr key={log.id}>
                     <td className="text-xs text-slate-500 font-medium">
-                      {log.criadoEm.toLocaleString('pt-BR')}
+                      {log.criadoEm.toLocaleString('pt-BR', { timeZone: 'America/Bahia' })}
                     </td>
                     <td>
                       <div className="font-semibold text-slate-900">{log.usuario?.nome ?? 'Sistema'}</div>
