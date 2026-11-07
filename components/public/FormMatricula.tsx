@@ -2,6 +2,7 @@
 import { useActionState, useState } from 'react'
 import { submeterInteresseMatricula, type MatriculaState } from '@/app/actions/matricula'
 import { salvarLeadRapido } from '@/app/actions/leads'
+import { CAMPO_ARMADILHA } from '@/lib/validacao-publica'
 
 const WHATSAPP_PHONE = '557187226877'
 
@@ -97,6 +98,14 @@ export default function FormMatricula({ series }: FormMatriculaProps) {
 
   return (
     <form action={action} className="space-y-5">
+      <input
+        type="text"
+        name={CAMPO_ARMADILHA}
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute -left-[9999px] h-px w-px opacity-0"
+      />
       {state?.message && !state?.success && (
         <div
           role="alert"

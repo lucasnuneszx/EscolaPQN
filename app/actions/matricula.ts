@@ -4,12 +4,21 @@
 import { z } from 'zod'
 import { registrarAuditoria } from '@/lib/audit'
 import { salvarFormulario } from '@/lib/formularios'
+import { limiteExcedido, MENSAGEM_LIMITE } from '@/lib/rate-limit'
+import {
+  emailPublico,
+  enviadoPorRobo,
+  nomePessoa,
+  telefonePublico,
+  textoCurto,
+  textoLivre,
+} from '@/lib/validacao-publica'
 
 const InteresseMatriculaSchema = z.object({
-  nomeResponsavel: z.string().trim().min(2, { message: 'Informe o nome completo do responsável.' }),
-  emailResponsavel: z.string().email({ message: 'E-mail inválido.' }).trim().toLowerCase(),
-  telefone: z.string().trim().min(8, { message: 'Informe um telefone válido com DDD.' }),
-  nomeAluno: z.string().trim().min(2, { message: 'Informe o nome completo da criança.' }),
+  nomeResponsavel: nomePessoa('Informe o nome completo do responsável.'),
+  emailResponsavel: emailPublico,
+  telefone: telefonePublico('Informe um telefone válido com DDD.'),
+  nomeAluno: nomePessoa('Informe o nome completo da criança.'),
   idadeAluno: z
     .string()
     .optional()
@@ -17,9 +26,9 @@ const InteresseMatriculaSchema = z.object({
     .refine((v) => v === undefined || (Number.isInteger(v) && v >= 0 && v <= 18), {
       message: 'Informe uma idade válida.',
     }),
-  serieInteresse: z.string().trim().optional(),
-  turnoPreferido: z.string().trim().optional(),
-  mensagem: z.string().trim().optional(),
+  serieInteresse: textoCurto,
+  turnoPreferido: textoCurto,
+  mensagem: textoLivre().optional(),
 })
 
 export type MatriculaState = {
@@ -28,6 +37,17 @@ export type MatriculaState = {
   success?: boolean
 } | undefined
 
+const SUCESSO_MATRICULA: MatriculaState = {
+  success: true,
+  message:
+    'Recebemos seu interesse de matrícula! Nossa secretaria entrará em contato em breve para dar continuidade ao processo.',
+}
+
+const SUCESSO_VISITA: MatriculaState = {
+  success: true,
+  message: 'Solicitação de visita recebida! Entraremos em contato para confirmar o melhor horário.',
+}
+
 /**
  * Registra o interesse de matrícula enviado pelo site público.
  */
@@ -35,6 +55,9 @@ export async function submeterInteresseMatricula(
   prevState: MatriculaState,
   formData: FormData
 ): Promise<MatriculaState> {
+  if (enviadoPorRobo(formData)) return SUCESSO_MATRICULA
+  if (await limiteExcedido('formulario')) return { message: MENSAGEM_LIMITE }
+
   const validated = InteresseMatriculaSchema.safeParse({
     nomeResponsavel: formData.get('nomeResponsavel'),
     emailResponsavel: formData.get('emailResponsavel'),
@@ -73,21 +96,17 @@ export async function submeterInteresseMatricula(
     dadosDepois: formulario,
   })
 
-  return {
-    success: true,
-    message:
-      'Recebemos seu interesse de matrícula! Nossa secretaria entrará em contato em breve para dar continuidade ao processo.',
-  }
+  return SUCESSO_MATRICULA
 }
 
 const AgendamentoVisitaSchema = z.object({
-  nomeResponsavel: z.string().trim().min(2, { message: 'Informe o nome completo.' }),
-  emailResponsavel: z.string().email({ message: 'E-mail inválido.' }).trim().toLowerCase(),
-  telefone: z.string().trim().min(8, { message: 'Informe um telefone válido com DDD.' }),
-  nomeAluno: z.string().trim().min(2, { message: 'Informe o nome da criança.' }),
-  diaPreferido: z.string().trim().optional(),
-  turnoPreferido: z.string().trim().optional(),
-  mensagem: z.string().trim().optional(),
+  nomeResponsavel: nomePessoa('Informe o nome completo.'),
+  emailResponsavel: emailPublico,
+  telefone: telefonePublico('Informe um telefone válido com DDD.'),
+  nomeAluno: nomePessoa('Informe o nome da criança.'),
+  diaPreferido: textoCurto,
+  turnoPreferido: textoCurto,
+  mensagem: textoLivre().optional(),
 })
 
 /**
@@ -98,6 +117,9 @@ export async function solicitarAgendamentoVisita(
   prevState: MatriculaState,
   formData: FormData
 ): Promise<MatriculaState> {
+  if (enviadoPorRobo(formData)) return SUCESSO_VISITA
+  if (await limiteExcedido('formulario')) return { message: MENSAGEM_LIMITE }
+
   const validated = AgendamentoVisitaSchema.safeParse({
     nomeResponsavel: formData.get('nomeResponsavel'),
     emailResponsavel: formData.get('emailResponsavel'),
@@ -141,8 +163,5 @@ export async function solicitarAgendamentoVisita(
     dadosDepois: formulario,
   })
 
-  return {
-    success: true,
-    message: 'Solicitação de visita recebida! Entraremos em contato para confirmar o melhor horário.',
-  }
+  return SUCESSO_VISITA
 }

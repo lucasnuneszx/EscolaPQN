@@ -6,17 +6,21 @@ import { revalidatePath } from 'next/cache'
 import { getSession } from '@/lib/session'
 import { registrarAuditoria } from '@/lib/audit'
 import { salvarFormulario } from '@/lib/formularios'
+import { limiteExcedido } from '@/lib/rate-limit'
+import { emailPublico, nomePessoa, telefonePublico, textoLivre } from '@/lib/validacao-publica'
+
+const TELEFONE_VIA_WHATSAPP = '(Via WhatsApp)'
 
 const LeadRapidoSchema = z.object({
   tipo: z.enum(['MATRICULA', 'VISITA', 'CONTATO', 'WHATSAPP_EXPRESS']),
-  nomeResponsavel: z.string().trim().min(2),
-  emailResponsavel: z.string().email().optional().or(z.literal('')),
-  telefone: z.string().trim().min(8),
-  nomeAluno: z.string().trim().optional().or(z.literal('')),
-  idadeAluno: z.number().optional(),
-  serieInteresse: z.string().optional().or(z.literal('')),
-  turnoPreferido: z.string().optional().or(z.literal('')),
-  mensagem: z.string().optional().or(z.literal('')),
+  nomeResponsavel: nomePessoa('Nome inválido.'),
+  emailResponsavel: emailPublico.optional().or(z.literal('')),
+  telefone: telefonePublico('Telefone inválido.').or(z.literal(TELEFONE_VIA_WHATSAPP)),
+  nomeAluno: nomePessoa('Nome inválido.').optional().or(z.literal('')),
+  idadeAluno: z.number().int().min(0).max(18).optional(),
+  serieInteresse: z.string().trim().max(80).optional().or(z.literal('')),
+  turnoPreferido: z.string().trim().max(80).optional().or(z.literal('')),
+  mensagem: textoLivre().optional().or(z.literal('')),
 })
 
 /**
@@ -34,6 +38,10 @@ export async function salvarLeadRapido(dados: {
   mensagem?: string
 }) {
   try {
+    if (await limiteExcedido('formulario')) {
+      return { success: false, error: 'Muitas tentativas' }
+    }
+
     const validated = LeadRapidoSchema.safeParse(dados)
     if (!validated.success) {
       return { success: false, error: 'Dados incompletos' }

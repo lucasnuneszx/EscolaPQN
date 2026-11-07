@@ -586,3 +586,11 @@ model AuditLog {
   usuarioId   String?
   usuario     Usuario?      @relation("UsuarioAuditoria", fields: [usuarioId], references: [id])
 }
+
+// PROTEÇÃO
+
+model RateLimite {
+  chave    String   @id // "<ação>:<ip>"
+  contador Int
+  expiraEm DateTime
+}

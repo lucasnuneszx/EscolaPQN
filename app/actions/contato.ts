@@ -4,13 +4,15 @@ import { z } from 'zod'
 import { registrarAuditoria } from '@/lib/audit'
 import { salvarFormulario } from '@/lib/formularios'
 import { revalidatePath } from 'next/cache'
+import { limiteExcedido, MENSAGEM_LIMITE } from '@/lib/rate-limit'
+import { emailPublico, enviadoPorRobo, nomePessoa, telefonePublico, textoLivre } from '@/lib/validacao-publica'
 
 const ContatoSchema = z.object({
-  nome: z.string().trim().min(2, { message: 'Informe seu nome completo.' }),
-  email: z.string().email({ message: 'E-mail inválido.' }).trim().toLowerCase(),
-  telefone: z.string().trim().min(8, { message: 'Informe um telefone válido.' }),
-  assunto: z.string().trim().min(2, { message: 'Selecione um assunto.' }),
-  mensagem: z.string().trim().min(10, { message: 'Escreva uma mensagem com pelo menos 10 caracteres.' }),
+  nome: nomePessoa('Informe seu nome completo.'),
+  email: emailPublico,
+  telefone: telefonePublico('Informe um telefone válido com DDD.'),
+  assunto: z.string().trim().min(2, { message: 'Selecione um assunto.' }).max(80),
+  mensagem: textoLivre().min(10, { message: 'Escreva uma mensagem com pelo menos 10 caracteres.' }),
 })
 
 export type ContatoState = {
@@ -19,6 +21,11 @@ export type ContatoState = {
   success?: boolean
 } | undefined
 
+const SUCESSO_CONTATO: ContatoState = {
+  success: true,
+  message: 'Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.',
+}
+
 /**
  * Recebe uma mensagem de contato do site público e registra no banco de leads e em auditoria.
  */
@@ -26,6 +33,9 @@ export async function enviarMensagemContato(
   prevState: ContatoState,
   formData: FormData
 ): Promise<ContatoState> {
+  if (enviadoPorRobo(formData)) return SUCESSO_CONTATO
+  if (await limiteExcedido('formulario')) return { message: MENSAGEM_LIMITE }
+
   const validated = ContatoSchema.safeParse({
     nome: formData.get('nome'),
     email: formData.get('email'),
@@ -58,8 +68,5 @@ export async function enviarMensagemContato(
 
   revalidatePath('/admin/leads')
 
-  return {
-    success: true,
-    message: 'Mensagem enviada com sucesso! Nossa equipe entrará em contato em breve.',
-  }
+  return SUCESSO_CONTATO
 }

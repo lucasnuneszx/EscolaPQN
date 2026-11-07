@@ -12,6 +12,7 @@ import {
   type PerfilUsuario,
 } from '@/lib/session'
 import { getRedirectUrlPorPerfil } from '@/lib/rbac'
+import { limiteExcedido, MENSAGEM_LIMITE } from '@/lib/rate-limit'
 
 // Esquemas de validação
 
@@ -52,6 +53,8 @@ export async function login(
   prevState: AuthState,
   formData: FormData
 ): Promise<AuthState> {
+  if (await limiteExcedido('login')) return { message: MENSAGEM_LIMITE }
+
   const validated = LoginSchema.safeParse({
     email: formData.get('email'),
     password: formData.get('password'),
@@ -114,6 +117,8 @@ export async function solicitarRecuperacaoSenha(
   prevState: AuthState,
   formData: FormData
 ): Promise<AuthState> {
+  if (await limiteExcedido('senha')) return { message: MENSAGEM_LIMITE }
+
   const validated = ForgotPasswordSchema.safeParse({
     email: formData.get('email'),
   })
@@ -153,6 +158,8 @@ export async function redefinirSenha(
   prevState: AuthState,
   formData: FormData
 ): Promise<AuthState> {
+  if (await limiteExcedido('senha')) return { message: MENSAGEM_LIMITE }
+
   const validated = ResetPasswordSchema.safeParse({
     token: formData.get('token'),
     password: formData.get('password'),
