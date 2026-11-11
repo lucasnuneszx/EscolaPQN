@@ -82,7 +82,13 @@ const STATUS_CONFIG: Record<string, { label: string; badgeClass: string }> = {
     label: 'Arquivado',
     badgeClass: 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 border-slate-200 dark:border-slate-700',
   },
+  SUSPEITO: {
+    label: 'Suspeito (spam)',
+    badgeClass: 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 border-zinc-200 dark:border-zinc-700',
+  },
 }
+
+type StatusLead = 'NOVO' | 'CONTATADO' | 'EM_NEGOCIACAO' | 'MATRICULADO' | 'ARQUIVADO' | 'SUSPEITO'
 
 export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
   const [leads, setLeads] = useState<LeadItem[]>(initialLeads)
@@ -93,8 +99,9 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
   const [textoAnotacao, setTextoAnotacao] = useState('')
   const [isPending, startTransition] = useTransition()
 
-  const totalLeads = leads.length
-  const totalNovos = leads.filter((l) => !l.lido || l.status === 'NOVO').length
+  const leadsValidos = leads.filter((l) => l.status !== 'SUSPEITO')
+  const totalLeads = leadsValidos.length
+  const totalNovos = leadsValidos.filter((l) => !l.lido || l.status === 'NOVO').length
   const totalContatados = leads.filter((l) => l.status === 'CONTATADO' || l.status === 'EM_NEGOCIACAO').length
   const totalMatriculados = leads.filter((l) => l.status === 'MATRICULADO').length
 
@@ -107,7 +114,8 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
       (l.emailResponsavel && l.emailResponsavel.toLowerCase().includes(busca.toLowerCase()))
 
     const matchTipo = filtroTipo === 'TODOS' || l.tipo === filtroTipo
-    const matchStatus = filtroStatus === 'TODOS' || l.status === filtroStatus
+    const matchStatus =
+      filtroStatus === 'TODOS' ? l.status !== 'SUSPEITO' : l.status === filtroStatus
 
     return matchBusca && matchTipo && matchStatus
   })
@@ -119,7 +127,7 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
     })
   }
 
-  const handleMudarStatus = (id: string, status: 'NOVO' | 'CONTATADO' | 'EM_NEGOCIACAO' | 'MATRICULADO' | 'ARQUIVADO') => {
+  const handleMudarStatus = (id: string, status: StatusLead) => {
     startTransition(async () => {
       await atualizarStatusLead(id, status)
       setLeads((prev) => prev.map((l) => (l.id === id ? { ...l, status, lido: true } : l)))
@@ -259,6 +267,7 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
             <option value="EM_NEGOCIACAO">Em Negociação</option>
             <option value="MATRICULADO">Matriculado</option>
             <option value="ARQUIVADO">Arquivado</option>
+            <option value="SUSPEITO">Suspeitos (spam)</option>
           </select>
         </div>
       </div>
@@ -327,7 +336,7 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
                       onChange={(e) =>
                         handleMudarStatus(
                           lead.id,
-                          e.target.value as 'NOVO' | 'CONTATADO' | 'EM_NEGOCIACAO' | 'MATRICULADO' | 'ARQUIVADO'
+                          e.target.value as StatusLead
                         )
                       }
                       className="input text-xs py-1.5 px-2.5 font-medium cursor-pointer"
@@ -337,6 +346,7 @@ export function LeadsClientPage({ initialLeads }: LeadsClientPageProps) {
                       <option value="EM_NEGOCIACAO">Em Negociação</option>
                       <option value="MATRICULADO">Matriculado</option>
                       <option value="ARQUIVADO">Arquivar</option>
+                      <option value="SUSPEITO">Marcar como spam</option>
                     </select>
 
                     <button

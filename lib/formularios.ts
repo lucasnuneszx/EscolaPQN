@@ -1,6 +1,7 @@
 // Gravação de formulários do site público com proteção contra pedidos duplicados
 import 'server-only'
 import { prisma } from '@/lib/prisma'
+import { motivoSuspeita } from '@/lib/triagem-leads'
 
 type FormularioMatricula = Awaited<ReturnType<typeof prisma.formularioMatricula.create>>
 
@@ -44,13 +45,42 @@ function mesmoSolicitante(existente: FormularioMatricula, dados: DadosFormulario
   )
 }
 
+function dadosParaGravar(dados: DadosFormulario) {
+  return {
+    tipo: dados.tipo,
+    nomeResponsavel: dados.nomeResponsavel,
+    emailResponsavel: dados.emailResponsavel || null,
+    telefone: dados.telefone,
+    nomeAluno: dados.nomeAluno || null,
+    idadeAluno: dados.idadeAluno ?? null,
+    serieInteresse: dados.serieInteresse || null,
+    turnoPreferido: dados.turnoPreferido || null,
+    mensagem: dados.mensagem || null,
+  }
+}
+
 /**
+ * Envios com cara de propaganda vão direto para o status SUSPEITO, já marcados como vistos,
+ * para não entrarem na fila de atendimento nem dispararem notificação.
  * Cria o formulário ou, se o mesmo responsável já enviou um pedido equivalente
  * nas últimas 24h e ele ainda não foi tratado, complementa o registro existente.
  */
 export async function salvarFormulario(
   dados: DadosFormulario
 ): Promise<{ formulario: FormularioMatricula; duplicado: boolean }> {
+  const suspeita = motivoSuspeita(dados)
+  if (suspeita) {
+    const formulario = await prisma.formularioMatricula.create({
+      data: {
+        ...dadosParaGravar(dados),
+        status: 'SUSPEITO',
+        lido: true,
+        observacoesInternas: `Triagem automática: ${suspeita}.`,
+      },
+    })
+    return { formulario, duplicado: false }
+  }
+
   const recentes = await prisma.formularioMatricula.findMany({
     where: {
       tipo: { in: TIPOS_EQUIVALENTES[dados.tipo] ?? [dados.tipo] },
@@ -83,19 +113,7 @@ export async function salvarFormulario(
   }
 
   const formulario = await prisma.formularioMatricula.create({
-    data: {
-      tipo: dados.tipo,
-      nomeResponsavel: dados.nomeResponsavel,
-      emailResponsavel: dados.emailResponsavel || null,
-      telefone: dados.telefone,
-      nomeAluno: dados.nomeAluno || null,
-      idadeAluno: dados.idadeAluno ?? null,
-      serieInteresse: dados.serieInteresse || null,
-      turnoPreferido: dados.turnoPreferido || null,
-      mensagem: dados.mensagem || null,
-      status: 'NOVO',
-      lido: false,
-    },
+    data: { ...dadosParaGravar(dados), status: 'NOVO', lido: false },
   })
 
   return { formulario, duplicado: false }
