@@ -9,6 +9,9 @@ import { salvarFormulario } from '@/lib/formularios'
 import { limiteExcedido } from '@/lib/rate-limit'
 import { emailPublico, nomePessoa, telefonePublico, textoLivre } from '@/lib/validacao-publica'
 
+const STATUS_LEAD = ['NOVO', 'CONTATADO', 'EM_NEGOCIACAO', 'MATRICULADO', 'ARQUIVADO', 'SUSPEITO'] as const
+type StatusLead = (typeof STATUS_LEAD)[number]
+
 const TELEFONE_VIA_WHATSAPP = '(Via WhatsApp)'
 
 const LeadRapidoSchema = z.object({
@@ -98,11 +101,12 @@ export async function marcarLeadLido(id: string) {
 /**
  * Atualiza o status do lead no funil do gestor
  */
-export async function atualizarStatusLead(id: string, status: 'NOVO' | 'CONTATADO' | 'EM_NEGOCIACAO' | 'MATRICULADO' | 'ARQUIVADO') {
+export async function atualizarStatusLead(id: string, status: StatusLead) {
   const session = await getSession()
   if (!session || (session.perfil !== 'ADMIN' && session.perfil !== 'SECRETARIA')) {
     throw new Error('Não autorizado')
   }
+  if (!STATUS_LEAD.includes(status)) throw new Error('Status inválido')
 
   const lead = await prisma.formularioMatricula.update({
     where: { id },

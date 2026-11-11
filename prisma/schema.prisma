@@ -277,7 +277,7 @@ model FormularioMatricula {
   turnoPreferido      String?
   mensagem            String?
   ip                  String?
-  status              String   @default("NOVO") // "NOVO" | "CONTATADO" | "EM_NEGOCIACAO" | "MATRICULADO" | "ARQUIVADO"
+  status              String   @default("NOVO") // "NOVO" | "CONTATADO" | "EM_NEGOCIACAO" | "MATRICULADO" | "ARQUIVADO" | "SUSPEITO"
   lido                Boolean  @default(false)
   observacoesInternas String?
   criadoEm           DateTime @default(now())
